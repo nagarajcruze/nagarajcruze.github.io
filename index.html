@@ -102,26 +102,18 @@
 
         <!-- Section Header -->
         <div class="kb-header kb-animate-in">
-            <span class="kb-label">
-                <span class="pulse-dot"></span>
-                Knowledge Base
-            </span>
             <h2>Everything I've Learned</h2>
             <p>A living document of my expertise in DevOps, creative arts, and passions — built from markdown, powered
                 by curiosity.</p>
         </div>
 
-        <!-- Search -->
-        <div class="kb-search-wrap kb-animate-in">
-            <div class="kb-search">
+        <!-- Category Tabs (including inline Search Tab) -->
+        <div class="kb-cat-tabs kb-animate-in">
+            <div class="kb-search-tab">
                 <span class="kb-search-icon">🔍</span>
-                <input type="text" id="kb-search-input" placeholder="Search topics...">
+                <input type="text" id="kb-search-input" placeholder="Search...">
                 <span class="kb-search-count"></span>
             </div>
-        </div>
-
-        <!-- Category Tabs -->
-        <div class="kb-cat-tabs kb-animate-in">
             <!-- Categories rendered by JS -->
         </div>
 
@@ -148,6 +140,9 @@
                     <div class="kb-panel-topbar">
                         <div class="kb-panel-breadcrumb"></div>
                         <div class="kb-panel-actions">
+                            <button class="kb-panel-btn" id="kb-panel-zen-btn" title="Fullscreen Reader" type="button">
+                                <i class="fa fa-expand"></i>
+                            </button>
                             <button class="kb-panel-btn kb-mobile-only" id="kb-panel-close-btn" title="Close"
                                 type="button">✕</button>
                         </div>

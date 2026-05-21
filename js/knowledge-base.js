@@ -192,7 +192,7 @@
   var contentCache = {};
 
   /* ── DOM Selectors ───────────────────────────────────────────── */
-  var catTabsContainer, topicsContainer, contentPanel, contentPlaceholder, contentInner, panelBody, panelBreadcrumb, closeBtn, backdropEl;
+  var catTabsContainer, topicsContainer, contentPanel, contentPlaceholder, contentInner, panelBody, panelBreadcrumb, closeBtn, backdropEl, zenBtn;
 
   /* ── Utilities ───────────────────────────────────────────────── */
   function countTopics(category) {
@@ -218,7 +218,11 @@
   /* ── Sidebar Categories Grid ─────────────────────────────────── */
   function renderCategoryTabs(manifest) {
     if (!catTabsContainer) return;
-    catTabsContainer.innerHTML = '';
+    
+    // Remove existing category tabs, but preserve search tab
+    catTabsContainer.querySelectorAll('.kb-cat-tab').forEach(function (tab) {
+      tab.remove();
+    });
 
     manifest.categories.forEach(function (cat) {
       var tab = document.createElement('button');
@@ -245,6 +249,15 @@
 
   function selectCategory(catId) {
     activeCategoryId = catId;
+
+    // Clear search input when switching categories
+    var searchInput = document.getElementById('kb-search-input');
+    if (searchInput && searchInput.value) {
+      searchInput.value = '';
+      var countEl = document.querySelector('.kb-search-count');
+      if (countEl) countEl.classList.remove('visible');
+      if (catTabsContainer) catTabsContainer.classList.remove('search-active');
+    }
 
     // Update active tab UI state
     if (catTabsContainer) {
@@ -396,10 +409,53 @@
     }
   }
 
+  function toggleZenMode() {
+    var kbSection = document.getElementById('knowledge-base');
+    if (!kbSection) return;
+
+    var isZen = kbSection.classList.toggle('kb-zen-mode');
+    document.body.classList.toggle('kb-zen-active', isZen);
+
+    if (zenBtn) {
+      var icon = zenBtn.querySelector('i');
+      if (icon) {
+        if (isZen) {
+          icon.className = 'fa fa-compress';
+          zenBtn.classList.add('active');
+          zenBtn.title = 'Exit Fullscreen';
+        } else {
+          icon.className = 'fa fa-expand';
+          zenBtn.classList.remove('active');
+          zenBtn.title = 'Fullscreen Reader';
+        }
+      }
+    }
+  }
+
+  function exitZenMode() {
+    var kbSection = document.getElementById('knowledge-base');
+    if (!kbSection || !kbSection.classList.contains('kb-zen-mode')) return;
+
+    kbSection.classList.remove('kb-zen-mode');
+    document.body.classList.remove('kb-zen-active');
+
+    if (zenBtn) {
+      var icon = zenBtn.querySelector('i');
+      if (icon) {
+        icon.className = 'fa fa-expand';
+        zenBtn.classList.remove('active');
+        zenBtn.title = 'Fullscreen Reader';
+      }
+    }
+  }
+
   function closeTopic() {
     if (contentPanel) contentPanel.classList.remove('open');
     if (backdropEl) backdropEl.classList.remove('open');
     document.body.classList.remove('kb-drawer-open');
+
+    // Exit Zen Mode if active
+    exitZenMode();
 
     // Clear hash
     if (history.replaceState) {
@@ -503,9 +559,64 @@
 
   /* ── Search ──────────────────────────────────────────────────── */
   function initSearch() {
+    var tab = document.querySelector('.kb-search-tab');
     var input = document.getElementById('kb-search-input');
     var countEl = document.querySelector('.kb-search-count');
     if (!input) return;
+
+    if (tab) {
+      var icon = tab.querySelector('.kb-search-icon');
+
+      // Prevent input from losing focus when clicking the icon
+      // This ensures our click logic can accurately detect if the input is active
+      if (icon) {
+        icon.addEventListener('mousedown', function(e) {
+          e.preventDefault();
+        });
+      }
+
+      tab.addEventListener('click', function (e) {
+        // If clicking the icon specifically, toggle search state
+        if (icon && icon.contains(e.target)) {
+          if (input.value) {
+            input.value = '';
+            performSearch('', countEl);
+          }
+          if (document.activeElement === input) {
+            input.blur();
+          } else {
+            input.focus();
+          }
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
+
+        if (document.activeElement !== input) {
+          input.focus();
+        }
+      });
+
+      // Toggle icon visually on focus/blur
+      input.addEventListener('focus', function () {
+        if (icon) icon.textContent = '✕';
+      });
+      input.addEventListener('blur', function () {
+        if (icon && !input.value) icon.textContent = '🔍';
+      });
+    }
+
+    // Handle Escape key to clear and blur the search
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        if (input.value) {
+          input.value = '';
+          performSearch('', countEl);
+        }
+        input.blur();
+        e.stopPropagation();
+      }
+    });
 
     var timer;
     input.addEventListener('input', function () {
@@ -522,15 +633,28 @@
     var oldNoResults = topicsContainer.querySelector('.kb-no-results');
     if (oldNoResults) oldNoResults.remove();
 
+    // Toggle search icon between 🔍 and ✕
+    var icon = document.querySelector('.kb-search-tab .kb-search-icon');
+    if (icon) {
+      if (query || document.activeElement === document.getElementById('kb-search-input')) {
+        icon.textContent = '✕';
+        if (query) icon.style.color = 'var(--kb-accent)';
+        else icon.style.color = '';
+      } else {
+        icon.textContent = '🔍';
+        icon.style.color = '';
+      }
+    }
+
     if (!query) {
-      if (catTabsContainer) catTabsContainer.classList.remove('kb-hidden');
+      if (catTabsContainer) catTabsContainer.classList.remove('search-active');
       if (countEl) countEl.classList.remove('visible');
       selectCategory(activeCategoryId);
       return;
     }
 
-    // Hide categories grid in search mode
-    if (catTabsContainer) catTabsContainer.classList.add('kb-hidden');
+    // Mark categories container as search active
+    if (catTabsContainer) catTabsContainer.classList.add('search-active');
 
     topicsContainer.innerHTML = '';
     var totalMatches = 0;
@@ -587,6 +711,20 @@
           }
 
           btn.addEventListener('click', function () {
+            // Update activeCategoryId to the category of this topic
+            activeCategoryId = match.category.id;
+
+            // Sync category tabs active visual state
+            if (catTabsContainer) {
+              catTabsContainer.querySelectorAll('.kb-cat-tab').forEach(function (tab) {
+                if (tab.getAttribute('data-category') === match.category.id) {
+                  tab.classList.add('active');
+                } else {
+                  tab.classList.remove('active');
+                }
+              });
+            }
+
             topicsContainer.querySelectorAll('.kb-topic-btn.active').forEach(function (b) {
               b.classList.remove('active');
             });
@@ -696,6 +834,7 @@
     panelBreadcrumb = document.querySelector('.kb-panel-breadcrumb');
     closeBtn = document.getElementById('kb-panel-close-btn');
     backdropEl = document.querySelector('.kb-drawer-backdrop');
+    zenBtn = document.getElementById('kb-panel-zen-btn');
 
     // Close button / Backdrop for mobile
     if (closeBtn) {
@@ -704,11 +843,19 @@
     if (backdropEl) {
       backdropEl.addEventListener('click', closeTopic);
     }
+    if (zenBtn) {
+      zenBtn.addEventListener('click', toggleZenMode);
+    }
 
     // Escape listener
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && contentPanel && contentPanel.classList.contains('open')) {
-        closeTopic();
+      if (e.key === 'Escape') {
+        var kbSection = document.getElementById('knowledge-base');
+        if (kbSection && kbSection.classList.contains('kb-zen-mode')) {
+          toggleZenMode();
+        } else if (contentPanel && contentPanel.classList.contains('open')) {
+          closeTopic();
+        }
       }
     });
 
