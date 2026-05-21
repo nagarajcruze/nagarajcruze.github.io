@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<!--[if IE 8 ]><html class="no-js oldie ie8" lang="en"> <![endif]-->
+<!--[if IE 9 ]><html class="no-js oldie ie9" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+
+<head>
+
+    <!--- basic page needs
+   ================================================== -->
+    <meta charset="utf-8">
+    <title>Nagaraj Cruze — DevOps Engineer & Knowledge Base</title>
+    <meta name="description" content="Nagaraj Cruze's personal portfolio and knowledge base. Explore DevOps, Videography, Photography, Audiophile gear, and Motorbikes.">
+    <meta name="author" content="Nagaraj Cruze">
+    <meta name="keywords" content="DevOps, Kubernetes, Docker, Terraform, CI/CD, Portfolio, Knowledge Base">
+
+    <!-- mobile specific metas
+   ================================================== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- CSS
+   ================================================== -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/knowledge-base.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- Highlight.js — GitHub Dark theme for code blocks -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+
+    <!-- script
+   ================================================== -->
+    <script src="js/modernizr.js"></script>
+
+    <!-- favicons
+	================================================== -->
+    <link rel="icon" type="image/png" href="favicon.png">
+
+</head>
+
+<body id="top">
+
+    <!-- intro section
+   ================================================== -->
+    <section id="intro">
+
+        <div class="intro-overlay"></div>
+
+        <div class="intro-content">
+            <div class="row">
+
+                <div class="col-twelve">
+                    <h5>Hello, World.</h5>
+                    <h1>I'm Nagaraj.</h1>
+
+                    <p class="intro-position">
+                        <span>Eat</span>
+                        <span>Code</span>
+                        <span>Ride</span>
+                        <span>Sleep</span>
+                    </p>
+                    <h5>DevOps Engineer | Infrastructure & Automation Enthusiast </h5>
+                </div>
+
+            </div>
+        </div>
+        <!-- /intro-content -->
+
+        <ul class="intro-social">
+            <li><a href="https://github.com/nagarajcruze" target="_blank"><i class="fa fa-github"></i></a></li>
+            <li><a href="https://facebook.com/nagarajcruze.3" target="_blank"><i class="fa fa-facebook"></i></a></li>
+            <li><a href="https://twitter.com/nagarajcruze" target="_blank"><i class="fa fa-twitter"></i></a></li>
+            <li><a href="https://instagram.com/nagarajcruze" target="_blank"><i class="fa fa-instagram"></i></a></li>
+            <li><a href="https://www.linkedin.com/in/nagaraj-cruze-a42334159" target="_blank"><i class="fa fa-linkedin-square"></i></a></li>
+            <li><a href="https://www.quora.com/profile/Nagaraj-Cruze" target="_blank"><i class="fa fa-quora"></i></a></li> 
+        </ul>
+        <!-- /intro-social -->
+
+        <!-- Bouncing scroll chevrons -->
+        <a href="#knowledge-base" class="scroll-indicator smoothscroll">
+            <div class="scroll-chevron">
+                <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </div>
+            <div class="scroll-chevron">
+                <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </div>
+        </a>
+
+    </section>
+    <!-- /intro -->
+
+
+    <!-- knowledge base section
+   ================================================== -->
+    <section id="knowledge-base">
+
+        <!-- Section Header -->
+        <div class="kb-header kb-animate-in">
+            <span class="kb-label">
+                <span class="pulse-dot"></span>
+                Knowledge Base
+            </span>
+            <h2>Everything I've Learned</h2>
+            <p>A living document of my expertise in DevOps, creative arts, and passions — built from markdown, powered by curiosity.</p>
+        </div>
+
+        <!-- Search -->
+        <div class="kb-search-wrap kb-animate-in">
+            <div class="kb-search">
+                <span class="kb-search-icon">🔍</span>
+                <input type="text" id="kb-search-input" placeholder="Search topics...">
+                <span class="kb-search-count"></span>
+            </div>
+        </div>
+
+        <!-- Category Tabs -->
+        <div class="kb-cat-tabs kb-animate-in">
+            <!-- Categories rendered by JS -->
+        </div>
+
+        <!-- KB Layout Container -->
+        <div class="kb-layout-container kb-animate-in">
+            <!-- Left Navigation Sidebar -->
+            <div class="kb-nav-sidebar">
+                <!-- Topics list for active category -->
+                <div class="kb-topics-list-container">
+                    <!-- Topics list rendered by JS -->
+                </div>
+            </div>
+
+            <!-- Content Panel (Inline on desktop, fixed slide-in drawer on mobile) -->
+            <div class="kb-content-panel">
+                <!-- Placeholder when no topic is selected -->
+                <div class="kb-content-placeholder">
+                    <div class="placeholder-icon">📖</div>
+                    <div class="placeholder-title">Select a Topic</div>
+                    <div class="placeholder-text">Choose a topic from the sidebar to start reading.</div>
+                </div>
+                <!-- Content View -->
+                <div class="kb-content-inner kb-hidden">
+                    <div class="kb-panel-topbar">
+                        <div class="kb-panel-breadcrumb"></div>
+                        <div class="kb-panel-actions">
+                            <button class="kb-panel-btn kb-mobile-only" id="kb-panel-close-btn" title="Close" type="button">✕</button>
+                        </div>
+                    </div>
+                    <div class="kb-panel-body"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Backdrop for mobile drawer mode -->
+        <div class="kb-drawer-backdrop"></div>
+
+    </section>
+    <!-- /knowledge-base -->
+
+
+    <div id="preloader">
+        <div id="loader"></div>
+    </div>
+
+    <!-- Java Script
+   ================================================== -->
+    <script src="js/jquery-2.1.3.min.js"></script>
+    <script src="js/plugins.js"></script>
+    <script src="js/main.js"></script>
+
+    <!-- Markdown & Syntax Highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <!-- Knowledge Base Logic -->
+    <script src="js/knowledge-base.js"></script>
+
+</body>
+
+</html>
