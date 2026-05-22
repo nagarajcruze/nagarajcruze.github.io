@@ -704,7 +704,10 @@
           }
         });
       },
-      { threshold: 0.08 }
+      { 
+        rootMargin: '0px 0px 150px 0px',
+        threshold: 0.01 
+      }
     );
 
     document.querySelectorAll('.kb-animate-in').forEach(function (el) {
