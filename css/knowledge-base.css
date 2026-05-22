@@ -325,6 +325,7 @@ html, body {
 .kb-cat-tab {
   display: flex;
   align-items: center;
+  flex-shrink: 0; /* Prevent squishing on smaller viewports */
   gap: 1.1rem;
   padding: 1rem 1.8rem;
   background: var(--kb-surface);
@@ -376,6 +377,7 @@ html, body {
 .kb-cat-tab-meta {
   display: flex;
   flex-direction: column;
+  justify-content: center; /* Center lines vertically on mobile/desktop */
   min-width: 0;
   transition: opacity 0.25s ease, width 0.25s ease;
   opacity: 1;
@@ -1335,10 +1337,11 @@ body.kb-zen-active {
 
   .kb-cat-tabs {
     gap: 0.6rem;
+    padding: 0.8rem 1.5rem; /* Give more space for scrolling categories */
   }
 
   .kb-cat-tab {
-    padding: 1rem 1.2rem;
+    padding: 0.6rem 1.2rem; /* Reduce vertical padding to fit text height */
   }
 
   .kb-cat-tab-icon {
@@ -1347,6 +1350,11 @@ body.kb-zen-active {
 
   .kb-cat-tab-label {
     font-size: 1.1rem;
+  }
+
+  .kb-cat-tab-count {
+    font-size: 0.85rem;
+    margin-top: 0.1rem;
   }
 
   .kb-topics-list-container {
