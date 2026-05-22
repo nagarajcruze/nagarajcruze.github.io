@@ -1387,6 +1387,9 @@ header .logo a {
  * --------------------------------------------------------------- 
  */
 @media only screen and (max-width:1024px) {
+	#intro {
+		background-attachment: scroll;
+	}
 	.intro-content h1 {
 		font-size: 7.6rem;
 	}
