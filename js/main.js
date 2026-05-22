@@ -12,7 +12,7 @@
 	/*---------------------------------------------------- */
 	/* Preloader
 	------------------------------------------------------ */ 
-   $(window).load(function() {
+   $(window).on('load', function() {
 
       // will first fade out the loading animation 
     	$("#loader").fadeOut("slow", function(){
@@ -20,7 +20,7 @@
         // will fade out the whole DIV that covers the website.
         $("#preloader").delay(300).fadeOut("slow", function() {
            // Auto-scroll hint after 3 seconds to peek content below the fold
-           setTimeout(function() {
+           var peekTimer = setTimeout(function() {
               // Only auto-scroll if the user hasn't manually scrolled yet
               if ($(window).scrollTop() < 10) {
                  var peekAmount = $(window).height() * 0.10; // Scroll down 10% of viewport
@@ -29,6 +29,14 @@
                  }, 1200, 'swing');
               }
            }, 3000);
+
+           // Cancel auto-scroll if user interacts
+           function cancelPeek() {
+              clearTimeout(peekTimer);
+              $('html, body').stop(true);
+              $(window).off('wheel touchstart', cancelPeek);
+           }
+           $(window).on('wheel touchstart', cancelPeek);
         });
 
       });       

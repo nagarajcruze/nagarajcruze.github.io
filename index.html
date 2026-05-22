@@ -1,9 +1,5 @@
 <!DOCTYPE html>
-<!--[if IE 8 ]><html class="no-js oldie ie8" lang="en"> <![endif]-->
-<!--[if IE 9 ]><html class="no-js oldie ie9" lang="en"> <![endif]-->
-<!--[if (gte IE 9)|!(IE)]><!-->
-<html class="no-js" lang="en">
-<!--<![endif]-->
+<html lang="en">
 
 <head>
 
@@ -18,7 +14,7 @@
 
     <!-- mobile specific metas
    ================================================== -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- CSS
    ================================================== -->
@@ -37,6 +33,7 @@
     <!-- favicons
 	================================================== -->
     <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="preload" as="image" href="images/intro-bg.jpg">
 
 </head>
 
@@ -69,12 +66,10 @@
         <!-- /intro-content -->
 
         <ul class="intro-social">
-            <li><a href="https://github.com/nagarajcruze" target="_blank"><i class="fa fa-github"></i></a></li>
-            <li><a href="https://twitter.com/nagarajcruze" target="_blank"><i class="fa fa-twitter"></i></a></li>
-            <li><a href="https://instagram.com/nagarajcruze" target="_blank"><i class="fa fa-instagram"></i></a></li>
-            <li><a href="https://www.linkedin.com/in/nagaracruze/" target="_blank"><i
-                        class="fa fa-linkedin-square"></i></a></li>
-            </li>
+            <li><a href="https://github.com/nagarajcruze" target="_blank" rel="noopener noreferrer"><i class="fa fa-github"></i></a></li>
+            <li><a href="https://twitter.com/nagarajcruze" target="_blank" rel="noopener noreferrer"><i class="fa fa-twitter"></i></a></li>
+            <li><a href="https://instagram.com/nagarajcruze" target="_blank" rel="noopener noreferrer"><i class="fa fa-instagram"></i></a></li>
+            <li><a href="https://www.linkedin.com/in/nagaracruze/" target="_blank" rel="noopener noreferrer"><i class="fa fa-linkedin-square"></i></a></li>
         </ul>
         <!-- /intro-social -->
 
@@ -109,7 +104,16 @@
         <!-- Category Tabs (including inline Search Tab) -->
         <div class="kb-cat-tabs kb-animate-in">
             <div class="kb-search-tab">
-                <span class="kb-search-icon">🔍</span>
+                <span class="kb-search-icon" data-mode="search">
+                    <svg class="kb-icon-search" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <svg class="kb-icon-close" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </span>
                 <input type="text" id="kb-search-input" placeholder="Search...">
                 <span class="kb-search-count"></span>
             </div>
@@ -171,6 +175,7 @@
     <!-- Markdown & Syntax Highlighting -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/dockerfile.min.js"></script>
 
     <!-- Knowledge Base Logic -->
     <script src="js/knowledge-base.js"></script>

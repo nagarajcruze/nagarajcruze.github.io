@@ -227,17 +227,17 @@ html, body {
 
 /* Dim category tabs when search is active or focused */
 .kb-cat-tabs.search-active .kb-cat-tab,
-.kb-cat-tabs:focus-within .kb-cat-tab {
+.kb-cat-tabs:has(.kb-search-tab:focus-within) .kb-cat-tab {
   opacity: 0.6;
 }
 
 .kb-cat-tabs.search-active .kb-cat-tab:hover,
-.kb-cat-tabs:focus-within .kb-cat-tab:hover {
+.kb-cat-tabs:has(.kb-search-tab:focus-within) .kb-cat-tab:hover {
   opacity: 1;
 }
 
 .kb-cat-tabs.search-active .kb-cat-tab.active,
-.kb-cat-tabs:focus-within .kb-cat-tab.active {
+.kb-cat-tabs:has(.kb-search-tab:focus-within) .kb-cat-tab.active {
   background: var(--kb-surface) !important;
   border-color: var(--kb-border) !important;
   color: var(--kb-text-muted) !important;
@@ -296,7 +296,6 @@ html, body {
 /* Category Tabs Horizontal Row */
 .kb-cat-tabs {
   display: flex;
-  justify-content: center;
   justify-content: safe center;
   align-items: center;
   flex-wrap: nowrap; /* Prevent wrapping entirely */
@@ -306,8 +305,8 @@ html, body {
   gap: 1.2rem;
   max-width: 100%;
   width: 100%;
-  margin: 0 auto 3.5rem;
-  padding: 0 3rem;
+  margin: 0 auto 2.5rem; /* Reduced by 1rem to compensate for added padding */
+  padding: 1rem 3rem; /* Added vertical padding to prevent hover clipping */
   z-index: 2;
   position: relative;
   box-sizing: border-box;
@@ -360,15 +359,18 @@ html, body {
 
 .kb-cat-tab.active {
   background: var(--kb-accent-soft);
-  border-color: rgba(255, 0, 119, 0.3);
+  border-color: rgba(255, 0, 119, 0.25);
   color: #FFFFFF;
-  box-shadow: 0 0 15px rgba(255, 0, 119, 0.08);
 }
 
 .kb-cat-tab-icon {
   font-size: 1.8rem;
   flex-shrink: 0;
   line-height: 1;
+}
+
+.kb-cat-tab.active .kb-cat-tab-icon {
+  color: var(--kb-accent);
 }
 
 .kb-cat-tab-meta {
@@ -394,8 +396,8 @@ html, body {
 }
 
 .kb-cat-tab.active .kb-cat-tab-count {
-  opacity: 0.8;
-  color: var(--kb-accent);
+  opacity: 0.9;
+  color: #FFFFFF;
 }
 
 /* Topics list container */
@@ -665,6 +667,7 @@ html, body {
 }
 
 .kb-panel-body {
+  position: relative;
   flex: 1;
   overflow-y: auto;
   padding: 2.8rem 3.5rem 4rem;
@@ -690,8 +693,6 @@ html, body {
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.35s ease, visibility 0.35s ease;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
 }
 
 .kb-drawer-backdrop.open {
@@ -775,6 +776,41 @@ html, body {
   margin: 1.8rem 0 0.6rem;
 }
 
+/* Heading Anchor Links */
+.kb-heading {
+  position: relative;
+}
+
+.kb-heading-anchor {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.6rem;
+  vertical-align: middle;
+  opacity: 0;
+  color: rgba(255, 255, 255, 0.4);
+  text-decoration: none;
+  font-weight: normal;
+  font-size: 0.85em;
+  padding: 0.2rem;
+  transition: opacity 0.2s ease, transform 0.2s ease, color 0.2s ease;
+}
+
+.kb-heading:hover .kb-heading-anchor {
+  opacity: 0.7;
+}
+
+.kb-heading-anchor:hover {
+  opacity: 1 !important;
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.kb-heading-anchor.copied {
+  opacity: 1 !important;
+  color: var(--kb-accent) !important;
+  transform: scale(1.1);
+}
+
 .kb-markdown p {
   margin: 0 0 1.4rem;
   color: var(--kb-text);
@@ -854,6 +890,27 @@ html, body {
 }
 
 /* Tables */
+.kb-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 1.4rem 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.06) transparent;
+}
+
+.kb-table-wrap::-webkit-scrollbar {
+  height: 4px;
+}
+
+.kb-table-wrap::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.08);
+  border-radius: 4px;
+}
+
+.kb-table-wrap .kb-markdown table {
+  margin: 0; /* Remove margin since wrapper handles it */
+}
+
 .kb-markdown table {
   width: 100%;
   border-collapse: collapse;
@@ -973,7 +1030,7 @@ html, body {
 }
 
 /* ── GitHub source link ───────────────────────────────────────────── */
-.kb-source-link {
+.kb-markdown a.kb-source-link {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -984,14 +1041,14 @@ html, body {
   border-radius: var(--kb-radius-sm);
   font-family: 'Inter', sans-serif;
   font-size: 1.1rem;
-  color: var(--kb-text-muted);
+  color: #fff;
   text-decoration: none;
   transition: all 0.2s;
 }
 
-.kb-source-link:hover {
-  background: rgba(255,255,255,0.06);
-  color: var(--kb-text);
+.kb-markdown a.kb-source-link:hover {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
   border-color: var(--kb-border-hover);
 }
 
@@ -1124,9 +1181,19 @@ body.kb-zen-active {
 
 /* ── Responsive ───────────────────────────────────────────────────── */
 @media only screen and (max-width: 1024px) {
+  #knowledge-base {
+    height: 100vh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 2rem !important;
+  }
+
   .kb-layout-container {
-    display: block;
-    height: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
     padding: 0 2rem;
     z-index: 1001; /* Must be higher than backdrop's 999 to prevent it from covering the drawer */
   }
@@ -1139,12 +1206,17 @@ body.kb-zen-active {
   .kb-nav-sidebar {
     width: 100%;
     max-width: 100%;
-    height: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
     gap: 1.8rem;
   }
 
   .kb-topics-list-container {
-    height: 420px;
+    flex: 1;
+    max-height: none !important;
+    height: auto !important;
   }
 
   .kb-mobile-only {
@@ -1194,7 +1266,7 @@ body.kb-zen-active {
 
 @media only screen and (max-width: 768px) {
   #knowledge-base {
-    padding: 7rem 0 5rem;
+    padding-top: 7rem;
   }
 
   .kb-header h2 {
@@ -1230,7 +1302,7 @@ body.kb-zen-active {
 
 @media only screen and (max-width: 600px) {
   #knowledge-base {
-    padding: 5rem 0 4rem;
+    padding-top: 5rem;
   }
 
   .kb-header h2 {
@@ -1259,7 +1331,6 @@ body.kb-zen-active {
 
   .kb-topics-list-container {
     padding: 1.5rem 1.2rem;
-    height: 360px;
   }
 
   .kb-panel-body {

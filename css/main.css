@@ -119,18 +119,19 @@ p.lead {
 		font-size: 1.7rem;
 	}
 }
-em, i, strong, b {
+:where(:not(#knowledge-base *)) :is(em, i, strong, b) {
 	font-size: 1.7rem;
 	line-height: 3rem;
 	font-style: normal;
 	font-weight: normal;
 }
-em, i {
+:where(:not(#knowledge-base *)) :is(em, i) {
 	font-family: "lora-italic", serif;
 }
-strong, b {
+:where(:not(#knowledge-base *)) :is(strong, b) {
 	font-family: "lora-bold", serif;
 }
+
 small {
 	font-size: 1.2rem;
 	line-height: inherit;
@@ -314,18 +315,18 @@ button, .button {
 fieldset {
 	margin-bottom: 1.5rem;
 }
-input,
-textarea,
-select,
-pre,
-blockquote,
-figure,
-table,
-p,
-ul,
-ol,
-dl,
-form,
+:where(:not(#knowledge-base)) input,
+:where(:not(#knowledge-base)) textarea,
+:where(:not(#knowledge-base)) select,
+:where(:not(#knowledge-base)) pre,
+:where(:not(#knowledge-base)) blockquote,
+:where(:not(#knowledge-base)) figure,
+:where(:not(#knowledge-base)) table,
+:where(:not(#knowledge-base)) p,
+:where(:not(#knowledge-base)) ul,
+:where(:not(#knowledge-base)) ol,
+:where(:not(#knowledge-base)) dl,
+:where(:not(#knowledge-base)) form,
 .fluid-video-wrapper,
 .ss-custom-select {
 	margin-bottom: 3rem;
@@ -466,15 +467,15 @@ img.pull-left {
 fieldset {
 	border: none;
 }
-input[type="email"],
-input[type="number"],
-input[type="search"],
-input[type="text"],
-input[type="tel"],
-input[type="url"],
-input[type="password"],
-textarea,
-select {
+:where(:not(#knowledge-base)) input[type="email"],
+:where(:not(#knowledge-base)) input[type="number"],
+:where(:not(#knowledge-base)) input[type="search"],
+:where(:not(#knowledge-base)) input[type="text"],
+:where(:not(#knowledge-base)) input[type="tel"],
+:where(:not(#knowledge-base)) input[type="url"],
+:where(:not(#knowledge-base)) input[type="password"],
+:where(:not(#knowledge-base)) textarea,
+:where(:not(#knowledge-base)) select {
 	display: block;
 	height: 6rem;
 	padding: 1.5rem 0;
@@ -601,12 +602,12 @@ label > input[type="checkbox"], label > input[type="radio"] {
  *
  * ------------------------------------------------------------------- 
  */
-.button,
-a.button,
-button,
-input[type="submit"],
-input[type="reset"],
-input[type="button"] {
+:where(:not(#knowledge-base)) .button,
+:where(:not(#knowledge-base)) a.button,
+:where(:not(#knowledge-base)) button,
+:where(:not(#knowledge-base)) input[type="submit"],
+:where(:not(#knowledge-base)) input[type="reset"],
+:where(:not(#knowledge-base)) input[type="button"] {
 	display: inline-block;
 	font-family: "poppins-bold", sans-serif;
 	font-size: 1.4rem;
@@ -629,17 +630,17 @@ input[type="button"] {
 	-ms-transition: all 0.3s ease-in-out;
 	transition: all 0.3s ease-in-out;
 }
-.button:hover,
-a.button:hover,
-button:hover,
-input[type="submit"]:hover,
-input[type="reset"]:hover,
-input[type="button"]:hover,
-.button:focus,
-button:focus,
-input[type="submit"]:focus,
-input[type="reset"]:focus,
-input[type="button"]:focus {
+:where(:not(#knowledge-base)) .button:hover,
+:where(:not(#knowledge-base)) a.button:hover,
+:where(:not(#knowledge-base)) button:hover,
+:where(:not(#knowledge-base)) input[type="submit"]:hover,
+:where(:not(#knowledge-base)) input[type="reset"]:hover,
+:where(:not(#knowledge-base)) input[type="button"]:hover,
+:where(:not(#knowledge-base)) .button:focus,
+:where(:not(#knowledge-base)) button:focus,
+:where(:not(#knowledge-base)) input[type="submit"]:focus,
+:where(:not(#knowledge-base)) input[type="reset"]:focus,
+:where(:not(#knowledge-base)) input[type="button"]:focus {
 	background: #bebebe;
 	color: #000000;
 	outline: 0;

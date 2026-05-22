@@ -183,18 +183,60 @@
     'devops/monitoring/prometheus.md': '# Prometheus\n\nOpen-source monitoring and alerting toolkit.\n\n## Config\n\n```yaml\nglobal:\n  scrape_interval: 15s\n\nscrape_configs:\n  - job_name: \'node-exporter\'\n    static_configs:\n      - targets: [\'localhost:9100\']\n  - job_name: \'app\'\n    metrics_path: \'/metrics\'\n    static_configs:\n      - targets: [\'app:8080\']\n```\n\n## PromQL\n\n```promql\n# CPU usage\n100 - (avg by(instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)\n\n# HTTP request rate\nrate(http_requests_total[5m])\n\n# 99th percentile latency\nhistogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m]))\n```\n',
 
     'devops/monitoring/grafana.md': '# Grafana\n\nAnalytics and visualization platform.\n\n## Key Features\n\n- **Dashboards** — Rich visualizations\n- **Data Sources** — Prometheus, InfluxDB, Elasticsearch, etc.\n- **Alerting** — Built-in alert rules\n- **Templating** — Dynamic dashboards with variables\n\n## Dashboard as Code\n\n```json\n{\n  \"dashboard\": {\n    \"title\": \"Application Metrics\",\n    \"panels\": [\n      {\n        \"title\": \"Request Rate\",\n        \"type\": \"graph\",\n        \"targets\": [\n          {\n            \"expr\": \"rate(http_requests_total[5m])\",\n            \"legendFormat\": \"{{method}} {{status}}\"\n          }\n        ]\n      }\n    ]\n  }\n}\n```\n\n> **Tip:** Use Grafana provisioning to manage dashboards as code in Git.\n',
+
+    'videography/camera-settings.md': '# Camera Settings\n\nEssential settings for videography.\n\n## The Exposure Triangle\n- **Aperture**: Depth of field.\n- **Shutter Speed**: Motion blur (180-degree shutter rule).\n- **ISO**: Sensor sensitivity.\n',
+    'photography/composition.md': '# Composition Techniques\n\n- Rule of Thirds\n- Leading Lines\n- Symmetry\n- Framing\n',
+    'audiophile/headphones.md': '# Headphones Guide\n\n- Open-back vs Closed-back\n- Planar Magnetic vs Dynamic Drivers\n- Impedance and Sensitivity\n',
+    'audiophile/dacs.md': '# DACs & Amps\n\nDigital-to-Analog Converters and Amplifiers.\n\n> A clean source makes all the difference.\n',
+    'motorbikes/maintenance.md': '# Basic Maintenance\n\n- Chain cleaning and lubrication\n- Oil changes\n- Tire pressure monitoring\n',
+    'motorbikes/gear-guide.md': '# Riding Gear\n\n- Helmets (ECE 22.06 rating)\n- Jackets (AA/AAA abrasion resistance)\n- Gloves & Boots\n',
   };
 
   /* ── State variables ─────────────────────────────────────────── */
   var currentManifest = null;
   var activeCategoryId = null;
   var activeFilePath = null;
+  var targetHeadingId = null;
   var contentCache = {};
 
   /* ── DOM Selectors ───────────────────────────────────────────── */
   var catTabsContainer, topicsContainer, contentPanel, contentPlaceholder, contentInner, panelBody, panelBreadcrumb, closeBtn, backdropEl, zenBtn;
 
   /* ── Utilities ───────────────────────────────────────────────── */
+  function debounce(func, wait) {
+    var timeout;
+    return function() {
+      var context = this, args = arguments;
+      clearTimeout(timeout);
+      timeout = setTimeout(function() {
+        func.apply(context, args);
+      }, wait);
+    };
+  }
+
+  window.copyHeadingLink = function(e, id) {
+    e.preventDefault();
+    if (!activeFilePath) return;
+    
+    var baseUrl = window.location.href.split('#')[0];
+    var pathStr = '#kb/' + encodeURIComponent(activeFilePath.replace('.md', ''));
+    var fullLink = baseUrl + pathStr + '#' + id;
+    
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(fullLink).then(function() {
+        var target = e.currentTarget;
+        target.classList.add('copied');
+        setTimeout(function() {
+          target.classList.remove('copied');
+        }, 1500);
+      });
+    }
+    
+    if (history.replaceState) {
+      history.replaceState(null, null, pathStr + '#' + id);
+    }
+  };
+
   function countTopics(category) {
     var count = 0;
     if (category.groups) {
@@ -223,6 +265,29 @@
     catTabsContainer.querySelectorAll('.kb-cat-tab').forEach(function (tab) {
       tab.remove();
     });
+
+    // Add "All Topics" tab
+    var totalTopicsCount = 0;
+    manifest.categories.forEach(function (cat) {
+      totalTopicsCount += countTopics(cat);
+    });
+
+    var allTab = document.createElement('button');
+    allTab.className = 'kb-cat-tab';
+    allTab.setAttribute('data-category', 'all');
+    allTab.type = 'button';
+    allTab.innerHTML =
+      '<span class="kb-cat-tab-icon">🌐</span>' +
+      '<div class="kb-cat-tab-meta">' +
+        '<span class="kb-cat-tab-label">All Topics</span>' +
+        '<span class="kb-cat-tab-count">' + totalTopicsCount + '</span>' +
+      '</div>';
+
+    allTab.addEventListener('click', function () {
+      selectCategory('all');
+    });
+
+    catTabsContainer.appendChild(allTab);
 
     manifest.categories.forEach(function (cat) {
       var tab = document.createElement('button');
@@ -279,56 +344,69 @@
     if (!topicsContainer || !currentManifest) return;
     topicsContainer.innerHTML = '';
 
-    var category = currentManifest.categories.find(function (c) {
-      return c.id === catId;
-    });
-    if (!category) return;
+    var categoriesToRender = [];
+    if (catId === 'all') {
+      categoriesToRender = currentManifest.categories;
+    } else {
+      var category = currentManifest.categories.find(function (c) {
+        return c.id === catId;
+      });
+      if (category) categoriesToRender.push(category);
+    }
 
-    category.groups.forEach(function (group) {
-      var groupEl = document.createElement('div');
-      groupEl.className = 'kb-sidebar-group';
+    if (categoriesToRender.length === 0) return;
 
-      var groupLabel = document.createElement('div');
-      groupLabel.className = 'kb-group-label';
-      groupLabel.innerHTML =
-        '<span class="kb-group-label-icon">' + (group.icon || '') + '</span>' +
-        '<span class="kb-group-label-text">' + group.label + '</span>' +
-        '<span class="kb-group-label-line"></span>';
-      groupEl.appendChild(groupLabel);
+    categoriesToRender.forEach(function(category) {
+      if (!category.groups) return;
 
-      if (group.topics) {
-        group.topics.forEach(function (topic) {
-          var item = document.createElement('div');
-          item.className = 'kb-topic-item';
-          item.setAttribute('data-file', topic.file);
+      category.groups.forEach(function (group) {
+        var groupEl = document.createElement('div');
+        groupEl.className = 'kb-sidebar-group';
 
-          item.innerHTML =
-            '<button class="kb-topic-btn" type="button">' +
-              '<span class="topic-dot"></span>' +
-              '<span class="kb-topic-label">' + topic.label + '</span>' +
-            '</button>';
+        var labelText = (catId === 'all') ? category.label + ' — ' + group.label : group.label;
 
-          var btn = item.querySelector('.kb-topic-btn');
+        var groupLabel = document.createElement('div');
+        groupLabel.className = 'kb-group-label';
+        groupLabel.innerHTML =
+          '<span class="kb-group-label-icon">' + (group.icon || '') + '</span>' +
+          '<span class="kb-group-label-text">' + labelText + '</span>' +
+          '<span class="kb-group-label-line"></span>';
+        groupEl.appendChild(groupLabel);
 
-          if (activeFilePath === topic.file) {
-            btn.classList.add('active');
-          }
+        if (group.topics) {
+          group.topics.forEach(function (topic) {
+            var item = document.createElement('div');
+            item.className = 'kb-topic-item';
+            item.setAttribute('data-file', topic.file);
 
-          btn.addEventListener('click', function () {
-            // Remove active classes
-            topicsContainer.querySelectorAll('.kb-topic-btn.active').forEach(function (b) {
-              b.classList.remove('active');
+            item.innerHTML =
+              '<button class="kb-topic-btn" type="button">' +
+                '<span class="topic-dot"></span>' +
+                '<span class="kb-topic-label">' + topic.label + '</span>' +
+              '</button>';
+
+            var btn = item.querySelector('.kb-topic-btn');
+
+            if (activeFilePath === topic.file) {
+              btn.classList.add('active');
+            }
+
+            btn.addEventListener('click', function () {
+              // Remove active classes
+              topicsContainer.querySelectorAll('.kb-topic-btn.active').forEach(function (b) {
+                b.classList.remove('active');
+              });
+              btn.classList.add('active');
+
+              selectTopic(topic.file, [category.label, group.label, topic.label]);
             });
-            btn.classList.add('active');
 
-            selectTopic(topic.file, [category.label, group.label, topic.label]);
+            groupEl.appendChild(item);
           });
+        }
 
-          groupEl.appendChild(item);
-        });
-      }
-
-      topicsContainer.appendChild(groupEl);
+        topicsContainer.appendChild(groupEl);
+      });
     });
   }
 
@@ -405,7 +483,7 @@
 
     // Update URL hash
     if (history.replaceState) {
-      history.replaceState(null, null, '#kb/' + filePath.replace('.md', ''));
+      history.replaceState(null, null, '#kb/' + encodeURIComponent(filePath.replace('.md', '')));
     }
   }
 
@@ -502,6 +580,14 @@
       });
     }
 
+    // Wrap tables in scrollable container for mobile
+    container.querySelectorAll('.kb-markdown table').forEach(function (table) {
+      var wrapper = document.createElement('div');
+      wrapper.className = 'kb-table-wrap';
+      table.parentNode.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    });
+
     // Custom code headers with Copy buttons
     container.querySelectorAll('pre').forEach(function (pre) {
       var code = pre.querySelector('code');
@@ -553,11 +639,42 @@
     var mdEl = container.querySelector('.kb-markdown');
     if (mdEl) mdEl.appendChild(sourceLink);
 
-    // Scroll container to top
+    // Scroll container to top initially
     container.scrollTop = 0;
+    
+    // If a heading was deep linked, scroll to it after rendering
+    if (targetHeadingId) {
+      setTimeout(function() {
+        var el = document.getElementById(targetHeadingId);
+        if (el) {
+          container.scrollTo({
+            top: el.offsetTop - 20,
+            behavior: 'smooth'
+          });
+        }
+        targetHeadingId = null;
+      }, 350);
+    }
   }
 
   /* ── Search ──────────────────────────────────────────────────── */
+  function setSearchIconMode(iconEl, mode) {
+    if (!iconEl) return;
+    var searchSvg = iconEl.querySelector('.kb-icon-search');
+    var closeSvg = iconEl.querySelector('.kb-icon-close');
+    if (!searchSvg || !closeSvg) return;
+
+    if (mode === 'close') {
+      searchSvg.style.display = 'none';
+      closeSvg.style.display = 'block';
+      iconEl.setAttribute('data-mode', 'close');
+    } else {
+      searchSvg.style.display = 'block';
+      closeSvg.style.display = 'none';
+      iconEl.setAttribute('data-mode', 'search');
+    }
+  }
+
   function initSearch() {
     var tab = document.querySelector('.kb-search-tab');
     var input = document.getElementById('kb-search-input');
@@ -599,10 +716,10 @@
 
       // Toggle icon visually on focus/blur
       input.addEventListener('focus', function () {
-        if (icon) icon.textContent = '✕';
+        setSearchIconMode(icon, 'close');
       });
       input.addEventListener('blur', function () {
-        if (icon && !input.value) icon.textContent = '🔍';
+        if (!input.value) setSearchIconMode(icon, 'search');
       });
     }
 
@@ -633,15 +750,15 @@
     var oldNoResults = topicsContainer.querySelector('.kb-no-results');
     if (oldNoResults) oldNoResults.remove();
 
-    // Toggle search icon between 🔍 and ✕
+    // Toggle search icon between search and close
     var icon = document.querySelector('.kb-search-tab .kb-search-icon');
     if (icon) {
       if (query || document.activeElement === document.getElementById('kb-search-input')) {
-        icon.textContent = '✕';
+        setSearchIconMode(icon, 'close');
         if (query) icon.style.color = 'var(--kb-accent)';
         else icon.style.color = '';
       } else {
-        icon.textContent = '🔍';
+        setSearchIconMode(icon, 'search');
         icon.style.color = '';
       }
     }
@@ -782,7 +899,9 @@
     var hash = window.location.hash;
     if (!hash || hash.indexOf('#kb/') !== 0) return;
 
-    var filePath = hash.slice(4) + '.md';
+    var parts = hash.slice(4).split('#');
+    var filePath = decodeURIComponent(parts[0]) + '.md';
+    targetHeadingId = parts[1] || null;
 
     if (!currentManifest) return;
 
@@ -836,6 +955,23 @@
     backdropEl = document.querySelector('.kb-drawer-backdrop');
     zenBtn = document.getElementById('kb-panel-zen-btn');
 
+    // Configure marked.js with custom renderer
+    if (typeof marked !== 'undefined') {
+      marked.use({
+        renderer: {
+          heading: function(text, level) {
+            var rawText = text.replace(/<[^>]*>?/gm, '');
+            var id = rawText.toLowerCase().replace(/[^\w]+/g, '-').replace(/(^-|-$)/g, '');
+            var svgLink = '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>';
+            return '<h' + level + ' id="' + id + '" class="kb-heading">' +
+                   text +
+                   '<a href="#' + id + '" class="kb-heading-anchor" onclick="copyHeadingLink(event, \'' + id + '\')">' + svgLink + '</a>' +
+                   '</h' + level + '>\n';
+          }
+        }
+      });
+    }
+
     // Close button / Backdrop for mobile
     if (closeBtn) {
       closeBtn.addEventListener('click', closeTopic);
@@ -859,10 +995,51 @@
       }
     });
 
+    // Resize listener (Bug 8 / Enhancement 9)
+    window.addEventListener('resize', debounce(function () {
+      if (window.innerWidth > 1024) {
+        // If resized to desktop, remove mobile drawer locks
+        document.body.classList.remove('kb-drawer-open');
+        if (backdropEl) backdropEl.classList.remove('open');
+        if (contentPanel) contentPanel.classList.remove('open');
+      } else if (activeFilePath && contentInner && !contentInner.classList.contains('kb-hidden')) {
+        // If resized down to mobile and a topic is active, re-apply mobile drawer locks
+        if (contentPanel) contentPanel.classList.add('open');
+        if (backdropEl) backdropEl.classList.add('open');
+        document.body.classList.add('kb-drawer-open');
+      }
+    }, 150));
+
+    // Keyboard Navigation (Feature 4)
+    if (topicsContainer) {
+      topicsContainer.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          var buttons = Array.from(topicsContainer.querySelectorAll('.kb-topic-btn'));
+          if (buttons.length === 0) return;
+          
+          var index = buttons.indexOf(document.activeElement);
+          if (index === -1) {
+            buttons[0].focus();
+            return;
+          }
+          
+          if (e.key === 'ArrowDown') {
+            var nextIndex = (index + 1) % buttons.length;
+            buttons[nextIndex].focus();
+          } else if (e.key === 'ArrowUp') {
+            var prevIndex = index - 1;
+            if (prevIndex < 0) prevIndex = buttons.length - 1;
+            buttons[prevIndex].focus();
+          }
+        }
+      });
+    }
+
     // Load Manifest
     if (CONFIG.useDemoData) {
       currentManifest = DEMO_MANIFEST;
-      activeCategoryId = currentManifest.categories[0].id;
+      activeCategoryId = 'all';
       renderCategoryTabs(currentManifest);
       selectCategory(activeCategoryId);
       handleHashRoute();
@@ -872,14 +1049,14 @@
         .then(function (res) { return res.json(); })
         .then(function (manifest) {
           currentManifest = manifest;
-          activeCategoryId = currentManifest.categories[0].id;
+          activeCategoryId = 'all';
           renderCategoryTabs(currentManifest);
           selectCategory(activeCategoryId);
           handleHashRoute();
         })
         .catch(function () {
           currentManifest = DEMO_MANIFEST;
-          activeCategoryId = currentManifest.categories[0].id;
+          activeCategoryId = 'all';
           renderCategoryTabs(currentManifest);
           selectCategory(activeCategoryId);
           handleHashRoute();
