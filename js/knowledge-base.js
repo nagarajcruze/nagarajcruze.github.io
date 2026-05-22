@@ -12,184 +12,7 @@
     githubUser: 'nagarajcruze',
     githubRepo: 'knowledge-base',
     githubBranch: 'main',
-    useDemoData: true, // Set false once your GitHub repo is ready
-  };
-
-  /* ── Demo Manifest (flat topics per category) ────────────────── */
-  var DEMO_MANIFEST = {
-    categories: [
-      {
-        id: 'devops',
-        label: 'DevOps',
-        icon: '🔧',
-        description: 'Infrastructure, automation & cloud engineering',
-        groups: [
-          {
-            label: 'Docker',
-            icon: '🐳',
-            topics: [
-              { id: 'docker-basics', label: 'Docker Basics', file: 'devops/docker/basics.md' },
-              { id: 'docker-compose', label: 'Docker Compose', file: 'devops/docker/compose.md' },
-              { id: 'docker-best-practices', label: 'Best Practices', file: 'devops/docker/best-practices.md' },
-            ],
-          },
-          {
-            label: 'Kubernetes',
-            icon: '☸️',
-            topics: [
-              { id: 'k8s-architecture', label: 'K8s Architecture', file: 'devops/kubernetes/architecture.md' },
-              { id: 'k8s-pods', label: 'Pods & Services', file: 'devops/kubernetes/pods-and-services.md' },
-              { id: 'k8s-helm', label: 'Helm Charts', file: 'devops/kubernetes/helm.md' },
-            ],
-          },
-          {
-            label: 'CI/CD',
-            icon: '🔄',
-            topics: [
-              { id: 'jenkins', label: 'Jenkins', file: 'devops/ci-cd/jenkins.md' },
-              { id: 'github-actions', label: 'GitHub Actions', file: 'devops/ci-cd/github-actions.md' },
-              { id: 'gitlab-ci', label: 'GitLab CI', file: 'devops/ci-cd/gitlab-ci.md' },
-            ],
-          },
-          {
-            label: 'Terraform',
-            icon: '🏗️',
-            topics: [
-              { id: 'tf-basics', label: 'Terraform Basics', file: 'devops/terraform/basics.md' },
-              { id: 'tf-modules', label: 'Modules & State', file: 'devops/terraform/modules.md' },
-            ],
-          },
-          {
-            label: 'Linux',
-            icon: '🐧',
-            topics: [
-              { id: 'linux-commands', label: 'Essential Commands', file: 'devops/linux/commands.md' },
-              { id: 'shell-scripting', label: 'Shell Scripting', file: 'devops/linux/shell-scripting.md' },
-            ],
-          },
-          {
-            label: 'Monitoring',
-            icon: '📊',
-            topics: [
-              { id: 'prometheus', label: 'Prometheus', file: 'devops/monitoring/prometheus.md' },
-              { id: 'grafana', label: 'Grafana', file: 'devops/monitoring/grafana.md' },
-            ],
-          },
-        ],
-      },
-      {
-        id: 'media-creative',
-        label: 'Media & Arts',
-        icon: '🎨',
-        description: 'Photography, videography, and creative storytelling',
-        groups: [
-          {
-            label: 'Camera & Composition',
-            icon: '📸',
-            topics: [
-              { id: 'camera-settings', label: 'Camera Settings', file: 'videography/camera-settings.md' },
-              { id: 'stabilization', label: 'Stabilization', file: 'videography/stabilization.md' },
-              { id: 'rule-of-thirds', label: 'Rule of Thirds', file: 'photography/composition.md' },
-              { id: 'leading-lines', label: 'Leading Lines', file: 'photography/leading-lines.md' },
-            ],
-          },
-          {
-            label: 'Editing & Processing',
-            icon: '✂️',
-            topics: [
-              { id: 'editing-workflow', label: 'Editing Workflow', file: 'videography/editing-workflow.md' },
-              { id: 'color-grading', label: 'Color Grading', file: 'videography/color-grading.md' },
-              { id: 'lightroom', label: 'Lightroom Tips', file: 'photography/lightroom-tips.md' },
-            ],
-          },
-        ],
-      },
-      {
-        id: 'audiophile',
-        label: 'Audiophile',
-        icon: '🎧',
-        description: 'High-fidelity audio & sound gear',
-        groups: [
-          {
-            label: 'Headphones',
-            icon: '🎵',
-            topics: [
-              { id: 'headphone-guide', label: 'Headphone Guide', file: 'audiophile/headphone-guide.md' },
-              { id: 'iems', label: 'IEMs', file: 'audiophile/iems.md' },
-            ],
-          },
-          {
-            label: 'DACs & Amps',
-            icon: '🔊',
-            topics: [
-              { id: 'dac-amp-basics', label: 'DAC/Amp Basics', file: 'audiophile/dac-amp-basics.md' },
-            ],
-          },
-        ],
-      },
-      {
-        id: 'motorbikes',
-        label: 'Motorbikes',
-        icon: '🏍️',
-        description: 'Rides, maintenance & motorcycle culture',
-        groups: [
-          {
-            label: 'Maintenance',
-            icon: '🔩',
-            topics: [
-              { id: 'basic-maintenance', label: 'Basic Maintenance', file: 'motorbikes/maintenance.md' },
-            ],
-          },
-          {
-            label: 'Gear & Safety',
-            icon: '🪖',
-            topics: [
-              { id: 'riding-gear', label: 'Riding Gear Guide', file: 'motorbikes/gear-guide.md' },
-            ],
-          },
-        ],
-      },
-    ],
-  };
-
-  /* ── Demo Markdown Content ───────────────────────────────────── */
-  var DEMO_CONTENT = {
-    'devops/docker/basics.md': '# Docker Basics\n\nDocker is a platform for developing, shipping, and running applications in **containers** — lightweight, portable, and self-sufficient environments.\n\n## Why Docker?\n\n- **Consistency** — Works the same in dev, staging, and production\n- **Isolation** — Each container runs independently\n- **Speed** — Containers start in seconds, not minutes\n- **Efficiency** — Share the host OS kernel, less overhead than VMs\n\n## Key Concepts\n\n| Concept | Description |\n|---------|-------------|\n| **Image** | A read-only template with instructions for creating a container |\n| **Container** | A runnable instance of an image |\n| **Dockerfile** | A text file with instructions to build an image |\n| **Registry** | A storage and distribution system for images (e.g., Docker Hub) |\n\n## Essential Commands\n\n```bash\n# Pull an image from Docker Hub\ndocker pull nginx:latest\n\n# Run a container\ndocker run -d --name my-nginx -p 8080:80 nginx:latest\n\n# List running containers\ndocker ps\n\n# View container logs\ndocker logs my-nginx\n\n# Stop and remove a container\ndocker stop my-nginx\ndocker rm my-nginx\n\n# Build an image from a Dockerfile\ndocker build -t my-app:1.0 .\n```\n\n## Dockerfile Example\n\n```dockerfile\nFROM node:18-alpine\nWORKDIR /app\nCOPY package*.json ./\nRUN npm ci --only=production\nCOPY . .\nEXPOSE 3000\nCMD [\"node\", \"server.js\"]\n```\n\n> **Pro Tip:** Always use specific image tags (e.g., `node:18-alpine`) instead of `latest` in production to ensure reproducible builds.\n',
-
-    'devops/docker/compose.md': '# Docker Compose\n\nDocker Compose is a tool for defining and running **multi-container** Docker applications using a YAML configuration file.\n\n## Why Compose?\n\n- Define your entire application stack in a single file\n- Start all services with one command\n- Manage networking between containers automatically\n- Perfect for local development and testing\n\n## docker-compose.yml Example\n\n```yaml\nversion: \'3.8\'\n\nservices:\n  web:\n    build: ./frontend\n    ports:\n      - \"3000:3000\"\n    depends_on:\n      - api\n    environment:\n      - API_URL=http://api:8080\n\n  api:\n    build: ./backend\n    ports:\n      - \"8080:8080\"\n    depends_on:\n      - db\n    environment:\n      - DATABASE_URL=postgres://user:pass@db:5432/mydb\n\n  db:\n    image: postgres:15-alpine\n    volumes:\n      - pgdata:/var/lib/postgresql/data\n    environment:\n      - POSTGRES_USER=user\n      - POSTGRES_PASSWORD=pass\n      - POSTGRES_DB=mydb\n\nvolumes:\n  pgdata:\n```\n\n## Essential Commands\n\n```bash\n# Start all services\ndocker-compose up -d\n\n# View logs\ndocker-compose logs -f\n\n# Stop all services\ndocker-compose down\n\n# Rebuild and restart\ndocker-compose up -d --build\n\n# Scale a service\ndocker-compose up -d --scale web=3\n```\n',
-
-    'devops/docker/best-practices.md': '# Docker Best Practices\n\n## Image Optimization\n\n1. **Use multi-stage builds** to reduce image size\n2. **Use `.dockerignore`** to exclude unnecessary files\n3. **Order layers by change frequency** — put rarely-changing layers first\n4. **Use specific base image tags** — never `latest` in production\n\n```dockerfile\n# Multi-stage build example\nFROM node:18-alpine AS builder\nWORKDIR /app\nCOPY package*.json ./\nRUN npm ci\nCOPY . .\nRUN npm run build\n\nFROM nginx:alpine\nCOPY --from=builder /app/dist /usr/share/nginx/html\nEXPOSE 80\n```\n\n## Security\n\n- **Don\'t run as root** — use `USER` directive\n- **Scan images** — `docker scout`, `trivy`\n- **Use read-only filesystems** where possible\n- **Never store secrets in images** — use env vars or secrets management\n\n## Resource Management\n\n```bash\n# Limit container resources\ndocker run -d \\\n  --memory=\"256m\" \\\n  --cpus=\"0.5\" \\\n  --restart=unless-stopped \\\n  my-app:1.0\n```\n',
-
-    'devops/kubernetes/architecture.md': '# Kubernetes Architecture\n\nKubernetes (K8s) is an open-source container orchestration platform.\n\n## Control Plane Components\n\n| Component | Role |\n|-----------|------|\n| **kube-apiserver** | Frontend for the K8s control plane |\n| **etcd** | Key-value store for cluster data |\n| **kube-scheduler** | Assigns pods to nodes |\n| **kube-controller-manager** | Runs controller processes |\n\n## Node Components\n\n| Component | Role |\n|-----------|------|\n| **kubelet** | Ensures containers are running in a Pod |\n| **kube-proxy** | Maintains network rules |\n| **Container Runtime** | Runs containers (e.g., containerd) |\n\n## Architecture Overview\n\n```\n┌─────────────────────────────────────┐\n│         Control Plane               │\n│  ┌──────────┐  ┌──────┐            │\n│  │API Server│  │ etcd │            │\n│  └──────────┘  └──────┘            │\n│  ┌──────────────────────────┐      │\n│  │ Scheduler + Controllers  │      │\n│  └──────────────────────────┘      │\n├─────────────────────────────────────┤\n│         Worker Nodes                │\n│  ┌───────────┐  ┌───────────┐      │\n│  │  Node 1   │  │  Node 2   │      │\n│  │ kubelet   │  │ kubelet   │      │\n│  │ Pod  Pod  │  │ Pod  Pod  │      │\n│  └───────────┘  └───────────┘      │\n└─────────────────────────────────────┘\n```\n\n## Key Concepts\n\n- **Pod** — Smallest deployable unit\n- **Service** — Stable network endpoint for Pods\n- **Deployment** — Declarative updates for Pods\n- **Namespace** — Virtual clusters within a cluster\n',
-
-    'devops/kubernetes/pods-and-services.md': '# Pods & Services\n\n## Pods\n\nA Pod is the **smallest deployable unit** in Kubernetes.\n\n```yaml\napiVersion: v1\nkind: Pod\nmetadata:\n  name: my-app\n  labels:\n    app: my-app\nspec:\n  containers:\n    - name: app\n      image: my-app:1.0\n      ports:\n        - containerPort: 8080\n      resources:\n        requests:\n          memory: \"128Mi\"\n          cpu: \"250m\"\n        limits:\n          memory: \"256Mi\"\n          cpu: \"500m\"\n```\n\n## Services\n\n| Type | Description |\n|------|-------------|\n| **ClusterIP** | Internal-only access (default) |\n| **NodePort** | Exposes on each node\'s IP |\n| **LoadBalancer** | Cloud load balancer |\n| **ExternalName** | Maps to a DNS name |\n\n```yaml\napiVersion: v1\nkind: Service\nmetadata:\n  name: my-app-service\nspec:\n  type: ClusterIP\n  selector:\n    app: my-app\n  ports:\n    - port: 80\n      targetPort: 8080\n```\n',
-
-    'devops/kubernetes/helm.md': '# Helm Charts\n\nHelm is the **package manager for Kubernetes**.\n\n## Key Concepts\n\n- **Chart** — A package of K8s resources\n- **Release** — A running instance of a chart\n- **Repository** — A collection of charts\n- **Values** — Configuration to customize a chart\n\n## Commands\n\n```bash\nhelm repo add bitnami https://charts.bitnami.com/bitnami\nhelm search repo nginx\nhelm install my-release bitnami/nginx\nhelm list\nhelm upgrade my-release bitnami/nginx --set replicaCount=3\nhelm uninstall my-release\n```\n\n## Creating Your Own Chart\n\n```bash\nhelm create my-chart\n\n# Structure\nmy-chart/\n├── Chart.yaml\n├── values.yaml\n├── templates/\n│   ├── deployment.yaml\n│   ├── service.yaml\n│   └── ingress.yaml\n└── charts/\n```\n',
-
-    'devops/ci-cd/github-actions.md': '# GitHub Actions\n\nCI/CD platform built into GitHub.\n\n```yaml\nname: CI/CD Pipeline\n\non:\n  push:\n    branches: [main]\n  pull_request:\n    branches: [main]\n\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - name: Setup Node\n        uses: actions/setup-node@v4\n        with:\n          node-version: \'18\'\n      - run: npm ci\n      - run: npm test\n      - run: npm run build\n\n  deploy:\n    needs: build\n    runs-on: ubuntu-latest\n    if: github.ref == \'refs/heads/main\'\n    steps:\n      - run: echo \"Deploying...\"\n```\n',
-
-    'devops/ci-cd/jenkins.md': '# Jenkins\n\nOpen-source automation server.\n\n```groovy\npipeline {\n    agent any\n    stages {\n        stage(\'Build\') {\n            steps { sh \'npm ci && npm run build\' }\n        }\n        stage(\'Test\') {\n            steps { sh \'npm test\' }\n        }\n        stage(\'Deploy\') {\n            when { branch \'main\' }\n            steps { sh \'kubectl apply -f k8s/\' }\n        }\n    }\n}\n```\n',
-
-    'devops/ci-cd/gitlab-ci.md': '# GitLab CI/CD\n\nUses `.gitlab-ci.yml` in your repository root.\n\n```yaml\nstages:\n  - build\n  - test\n  - deploy\n\nbuild:\n  stage: build\n  image: docker:latest\n  script:\n    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA .\n    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA\n\ntest:\n  stage: test\n  image: node:18\n  script:\n    - npm ci\n    - npm test\n\ndeploy:\n  stage: deploy\n  script:\n    - kubectl set image deployment/app app=$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA\n  only:\n    - main\n  when: manual\n```\n',
-
-    'devops/terraform/basics.md': '# Terraform Basics\n\nInfrastructure as Code (IaC) tool.\n\n## Core Workflow\n\n```bash\nterraform init      # Download providers\nterraform plan      # Preview changes\nterraform apply     # Apply changes\nterraform destroy   # Tear down\n```\n\n## HCL Example\n\n```hcl\nprovider \"aws\" {\n  region = \"us-east-1\"\n}\n\nresource \"aws_instance\" \"web\" {\n  ami           = \"ami-0c55b159cbfafe1f0\"\n  instance_type = var.instance_type\n  tags = { Name = \"web-server\" }\n}\n\nvariable \"instance_type\" {\n  default = \"t3.micro\"\n}\n\noutput \"instance_ip\" {\n  value = aws_instance.web.public_ip\n}\n```\n\n| Concept | Description |\n|---------|-------------|\n| **Provider** | Cloud/service API plugin |\n| **Resource** | Infrastructure component |\n| **Variable** | Parameterized input |\n| **Output** | Values shown after apply |\n| **State** | Config ↔ real-world mapping |\n',
-
-    'devops/terraform/modules.md': '# Terraform Modules & State\n\n## Modules\n\nReusable packages of Terraform config.\n\n```hcl\nmodule \"vpc\" {\n  source       = \"./modules/vpc\"\n  cidr_block   = \"10.0.0.0/16\"\n  environment  = \"production\"\n}\n\nmodule \"eks\" {\n  source  = \"terraform-aws-modules/eks/aws\"\n  version = \"~> 19.0\"\n  vpc_id  = module.vpc.vpc_id\n}\n```\n\n## Remote State\n\n```hcl\nterraform {\n  backend \"s3\" {\n    bucket         = \"my-terraform-state\"\n    key            = \"prod/terraform.tfstate\"\n    region         = \"us-east-1\"\n    dynamodb_table = \"terraform-locks\"\n    encrypt        = true\n  }\n}\n```\n\n> **Important:** Never commit `terraform.tfstate` to version control.\n',
-
-    'devops/linux/commands.md': '# Essential Linux Commands\n\n## File System\n\n```bash\npwd                    # Print working directory\nls -la                 # List all files\nfind / -name \"*.log\"   # Find files\ntree -L 2              # Directory tree\ndu -sh *               # Disk usage\ndf -h                  # Disk space\n```\n\n## Text Processing\n\n```bash\ngrep -r \"pattern\" .          # Recursive search\nawk \'{print $1, $3}\' file    # Print columns\nsed \'s/old/new/g\' file       # Find & replace\ntail -f /var/log/syslog      # Follow log\nwc -l file                   # Count lines\n```\n\n## Process Management\n\n```bash\nps aux                       # List processes\nkill -9 <PID>                # Force kill\nsystemctl status nginx       # Service status\njournalctl -u nginx -f       # Service logs\n```\n\n## Networking\n\n```bash\nip addr show                 # Show IPs\nss -tulnp                    # Listening ports\ncurl -I https://example.com  # HTTP headers\ndig example.com              # DNS lookup\n```\n',
-
-    'devops/linux/shell-scripting.md': '# Shell Scripting\n\n## Template\n\n```bash\n#!/bin/bash\nset -euo pipefail\n\nAPP_NAME=\"my-app\"\nlog() { echo \"[$(date \'+%Y-%m-%d %H:%M:%S\')] $1\"; }\nlog \"Starting $APP_NAME\"\n```\n\n## Control Structures\n\n```bash\n# If/else\nif [ -f \"/path/to/file\" ]; then\n  echo \"File exists\"\nfi\n\n# For loop\nfor server in web-{1..5}; do\n  ssh \"$server\" \'sudo systemctl restart nginx\'\ndone\n\n# While loop\nwhile read -r line; do\n  echo \"Processing: $line\"\ndone < input.txt\n```\n\n## Useful Patterns\n\n```bash\n# Check if command exists\ncommand -v docker >/dev/null 2>&1 || { echo \"Docker required\"; exit 1; }\n\n# Trap for cleanup\ntrap \'rm -f /tmp/lockfile\' EXIT\n```\n',
-
-    'devops/monitoring/prometheus.md': '# Prometheus\n\nOpen-source monitoring and alerting toolkit.\n\n## Config\n\n```yaml\nglobal:\n  scrape_interval: 15s\n\nscrape_configs:\n  - job_name: \'node-exporter\'\n    static_configs:\n      - targets: [\'localhost:9100\']\n  - job_name: \'app\'\n    metrics_path: \'/metrics\'\n    static_configs:\n      - targets: [\'app:8080\']\n```\n\n## PromQL\n\n```promql\n# CPU usage\n100 - (avg by(instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)\n\n# HTTP request rate\nrate(http_requests_total[5m])\n\n# 99th percentile latency\nhistogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m]))\n```\n',
-
-    'devops/monitoring/grafana.md': '# Grafana\n\nAnalytics and visualization platform.\n\n## Key Features\n\n- **Dashboards** — Rich visualizations\n- **Data Sources** — Prometheus, InfluxDB, Elasticsearch, etc.\n- **Alerting** — Built-in alert rules\n- **Templating** — Dynamic dashboards with variables\n\n## Dashboard as Code\n\n```json\n{\n  \"dashboard\": {\n    \"title\": \"Application Metrics\",\n    \"panels\": [\n      {\n        \"title\": \"Request Rate\",\n        \"type\": \"graph\",\n        \"targets\": [\n          {\n            \"expr\": \"rate(http_requests_total[5m])\",\n            \"legendFormat\": \"{{method}} {{status}}\"\n          }\n        ]\n      }\n    ]\n  }\n}\n```\n\n> **Tip:** Use Grafana provisioning to manage dashboards as code in Git.\n',
-
-    'videography/camera-settings.md': '# Camera Settings\n\nEssential settings for videography.\n\n## The Exposure Triangle\n- **Aperture**: Depth of field.\n- **Shutter Speed**: Motion blur (180-degree shutter rule).\n- **ISO**: Sensor sensitivity.\n',
-    'photography/composition.md': '# Composition Techniques\n\n- Rule of Thirds\n- Leading Lines\n- Symmetry\n- Framing\n',
-    'audiophile/headphones.md': '# Headphones Guide\n\n- Open-back vs Closed-back\n- Planar Magnetic vs Dynamic Drivers\n- Impedance and Sensitivity\n',
-    'audiophile/dacs.md': '# DACs & Amps\n\nDigital-to-Analog Converters and Amplifiers.\n\n> A clean source makes all the difference.\n',
-    'motorbikes/maintenance.md': '# Basic Maintenance\n\n- Chain cleaning and lubrication\n- Oil changes\n- Tire pressure monitoring\n',
-    'motorbikes/gear-guide.md': '# Riding Gear\n\n- Helmets (ECE 22.06 rating)\n- Jackets (AA/AAA abrasion resistance)\n- Gloves & Boots\n',
+    useDemoData: false, // Fetch from GitHub repository
   };
 
   /* ── State variables ─────────────────────────────────────────── */
@@ -456,12 +279,7 @@
       return;
     }
 
-    if (CONFIG.useDemoData && DEMO_CONTENT[filePath]) {
-      setTimeout(function () {
-        contentCache[filePath] = DEMO_CONTENT[filePath];
-        renderMarkdown(panelBody, DEMO_CONTENT[filePath], filePath);
-      }, 200);
-    } else {
+    
       fetch(rawUrl(filePath))
         .then(function (res) {
           if (!res.ok) throw new Error('Not found');
@@ -479,7 +297,7 @@
               '<div style="font-family:Inter,sans-serif;font-size:1.2rem;">This topic is being written.</div>' +
             '</div>';
         });
-    }
+    
 
     // Update URL hash
     if (history.replaceState) {
@@ -1037,13 +855,7 @@
     }
 
     // Load Manifest
-    if (CONFIG.useDemoData) {
-      currentManifest = DEMO_MANIFEST;
-      activeCategoryId = 'all';
-      renderCategoryTabs(currentManifest);
-      selectCategory(activeCategoryId);
-      handleHashRoute();
-    } else {
+    
       var manifestUrl = 'https://raw.githubusercontent.com/' + CONFIG.githubUser + '/' + CONFIG.githubRepo + '/' + CONFIG.githubBranch + '/manifest.json';
       fetch(manifestUrl)
         .then(function (res) { return res.json(); })
@@ -1054,14 +866,11 @@
           selectCategory(activeCategoryId);
           handleHashRoute();
         })
-        .catch(function () {
-          currentManifest = DEMO_MANIFEST;
-          activeCategoryId = 'all';
-          renderCategoryTabs(currentManifest);
-          selectCategory(activeCategoryId);
-          handleHashRoute();
+        .catch(function (err) {
+          console.error("Failed to load manifest:", err);
+          var topicsContainer = document.querySelector('.kb-topics-list-container');
+          if (topicsContainer) topicsContainer.innerHTML = '<div style="padding: 1rem; color: #ff6b6b;">Failed to load data from GitHub. Make sure the repository exists and is public.</div>';
         });
-    }
 
     initSearch();
     initScrollAnimations();
