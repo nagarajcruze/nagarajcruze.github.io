@@ -1074,6 +1074,7 @@ html, body {
   text-transform: none !important;
   letter-spacing: normal !important;
   line-height: 1.4 !important;
+  margin: 0 !important;
 }
 
 .kb-markdown a.kb-source-link:hover,
