@@ -615,6 +615,19 @@ html, body {
   border-bottom: 1px solid var(--kb-border);
   background: rgba(255, 255, 255, 0.015);
   flex-shrink: 0;
+  position: relative;
+}
+
+.kb-reading-progress {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 0%;
+  height: 2px;
+  background: var(--kb-accent);
+  box-shadow: 0 0 8px var(--kb-accent);
+  transition: width 0.1s ease-out;
+  z-index: 10;
 }
 
 .kb-panel-breadcrumb {
@@ -1031,27 +1044,50 @@ html, body {
   border-color: rgba(0, 212, 170, 0.25);
 }
 
-/* ── GitHub source link ───────────────────────────────────────────── */
-.kb-markdown a.kb-source-link {
+/* ── Content Footer & Next/Prev Navigation ────────────────────────── */
+.kb-content-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 3.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--kb-border);
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.kb-markdown a.kb-source-link,
+.kb-nav-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-top: 2rem;
   padding: 0.7rem 1.2rem;
   background: rgba(255,255,255,0.03);
   border: 1px solid var(--kb-border);
   border-radius: var(--kb-radius-sm);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', sans-serif !important;
   font-size: 1.1rem;
   color: #fff;
   text-decoration: none;
+  cursor: pointer;
   transition: all 0.2s;
+  height: auto !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  line-height: 1.4 !important;
+  margin: 0 !important;
 }
 
-.kb-markdown a.kb-source-link:hover {
+.kb-markdown a.kb-source-link:hover,
+.kb-nav-btn:hover {
   background: rgba(255,255,255,0.08);
   color: #fff;
   border-color: var(--kb-border-hover);
+}
+
+.kb-nav-buttons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 /* ── Scroll Indicator (Hero) ──────────────────────────────────────── */
@@ -1215,11 +1251,9 @@ body.kb-zen-active {
     min-height: 0;
     padding: 0 2rem;
     z-index: 1001; /* Must be higher than backdrop's 999 to prevent it from covering the drawer */
-  }
-
-  /* Prevent transform from trapping the fixed slide-in drawer */
-  .kb-layout-container.kb-animate-in.visible {
     transform: none !important;
+    -webkit-transform: none !important;
+    will-change: auto !important;
   }
 
   .kb-nav-sidebar {
@@ -1252,6 +1286,7 @@ body.kb-zen-active {
     top: 0;
     right: 0;
     bottom: 0;
+    height: 100vh !important;
     width: 75%;
     max-width: 580px;
     min-width: 320px;
