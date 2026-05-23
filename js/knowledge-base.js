@@ -446,6 +446,10 @@
       });
     });
 
+    // Create content footer
+    var footer = document.createElement('div');
+    footer.className = 'kb-content-footer';
+
     // View source link
     var sourceLink = document.createElement('a');
     sourceLink.className = 'kb-source-link';
@@ -453,9 +457,60 @@
     sourceLink.target = '_blank';
     sourceLink.rel = 'noopener';
     sourceLink.innerHTML = '📂 View source on GitHub';
+    footer.appendChild(sourceLink);
+
+    // Prev / Next Navigation Buttons (Feature 9)
+    var topicItems = Array.from(topicsContainer.querySelectorAll('.kb-topic-item'));
+    var index = topicItems.findIndex(function (item) {
+      return item.getAttribute('data-file') === filePath;
+    });
+
+    if (index !== -1 && topicItems.length > 1) {
+      var navContainer = document.createElement('div');
+      navContainer.className = 'kb-nav-buttons';
+
+      var prevItem = index > 0 ? topicItems[index - 1] : null;
+      var nextItem = index < topicItems.length - 1 ? topicItems[index + 1] : null;
+
+      if (prevItem) {
+        var prevBtn = document.createElement('button');
+        prevBtn.className = 'kb-nav-btn prev';
+        prevBtn.type = 'button';
+        prevBtn.innerHTML =
+          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.4rem; vertical-align: middle;">' +
+          '<polyline points="15 18 9 12 15 6"></polyline>' +
+          '</svg>' +
+          '<span>' + escapeHtml(prevItem.querySelector('.kb-topic-label').textContent) + '</span>';
+
+        prevBtn.addEventListener('click', function () {
+          var sidebarBtn = prevItem.querySelector('.kb-topic-btn');
+          if (sidebarBtn) sidebarBtn.click();
+        });
+        navContainer.appendChild(prevBtn);
+      }
+
+      if (nextItem) {
+        var nextBtn = document.createElement('button');
+        nextBtn.className = 'kb-nav-btn next';
+        nextBtn.type = 'button';
+        nextBtn.innerHTML =
+          '<span>' + escapeHtml(nextItem.querySelector('.kb-topic-label').textContent) + '</span>' +
+          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.4rem; vertical-align: middle;">' +
+          '<polyline points="9 18 15 12 9 6"></polyline>' +
+          '</svg>';
+
+        nextBtn.addEventListener('click', function () {
+          var sidebarBtn = nextItem.querySelector('.kb-topic-btn');
+          if (sidebarBtn) sidebarBtn.click();
+        });
+        navContainer.appendChild(nextBtn);
+      }
+
+      footer.appendChild(navContainer);
+    }
 
     var mdEl = container.querySelector('.kb-markdown');
-    if (mdEl) mdEl.appendChild(sourceLink);
+    if (mdEl) mdEl.appendChild(footer);
 
     // Scroll container to top initially
     container.scrollTop = 0;

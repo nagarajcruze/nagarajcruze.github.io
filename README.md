@@ -58,7 +58,7 @@ My Personal Portfolio Page
 - [ ] Feature 6: Syntax Highlighting Theme Switcher (planned later)
 - [x] Feature 7: Copy Link to Heading (Deep Anchors)
 - [ ] Feature 8: Reading progress bar at the top of the knowledge base panel
-- [ ] Feature 9: Next/Previous topic navigation buttons at the bottom of the content panel
+- [x] Feature 9: Next/Previous topic navigation buttons at the bottom of the content panel
 - [ ] Feature 10: Dynamic Table of Contents (ToC) sidebar for long articles
 - [ ] Feature 11: Full-text content search (planned later)
 - [ ] Feature 12: Interactive code playgrounds (planned later)
