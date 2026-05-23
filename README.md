@@ -54,7 +54,17 @@ My Personal Portfolio Page
 - [x] Feature 2: Expandable "Topics" drawer for mobile
 - [ ] Feature 3: Set up GitHub Repo & Fetch Manifest via API
 - [x] Feature 4: Keyboard navigation for topics sidebar
-- [ ] Feature 5: Keyboard Shortcuts (`Ctrl+K` for search, `Ctrl+B` for sidebar, `Esc` to close)
-- [ ] Feature 6: Syntax Highlighting Theme Switcher
+- [ ] Feature 5: Keyboard Shortcuts (`Ctrl+K` for search, `Ctrl+B` for sidebar, `Esc` to close) (planned later)
+- [ ] Feature 6: Syntax Highlighting Theme Switcher (planned later)
 - [x] Feature 7: Copy Link to Heading (Deep Anchors)
 - [ ] Feature 8: Reading progress bar at the top of the knowledge base panel
+- [ ] Feature 9: Next/Previous topic navigation buttons at the bottom of the content panel
+- [ ] Feature 10: Dynamic Table of Contents (ToC) sidebar for long articles
+- [ ] Feature 11: Full-text content search (planned later)
+- [ ] Feature 12: Interactive code playgrounds (planned later)
+- [ ] Feature 13: Fuzzy search command palette (planned later)
+- [ ] Feature 14: Export to PDF / Print optimization (planned later)
+- [ ] Feature 15: Offline Mode (PWA Support) (planned later)
+- [ ] Feature 16: Admonitions & visual callouts (planned later)
+- [ ] Feature 17: Gamified checklists / mark completed (planned later)
+- [ ] Feature 18: Roadmaps & Learning paths (planned later)
