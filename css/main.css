@@ -1376,12 +1376,20 @@ header .logo a {
 	color: #cc005f;
 }
 
+/* Custom class to bypass adblockers targeting fa-linkedin-square */
+.fa-custom-linkedin::before {
+	content: "\f08c";
+}
+
 /**
  * responsive:
  * Intro
  * --------------------------------------------------------------- 
  */
 @media only screen and (max-width:1024px) {
+	#intro {
+		background-attachment: scroll;
+	}
 	.intro-content h1 {
 		font-size: 7.6rem;
 	}

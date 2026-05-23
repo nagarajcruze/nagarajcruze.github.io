@@ -28,33 +28,33 @@
   /* ── Utilities ───────────────────────────────────────────────── */
   function debounce(func, wait) {
     var timeout;
-    return function() {
+    return function () {
       var context = this, args = arguments;
       clearTimeout(timeout);
-      timeout = setTimeout(function() {
+      timeout = setTimeout(function () {
         func.apply(context, args);
       }, wait);
     };
   }
 
-  window.copyHeadingLink = function(e, id) {
+  window.copyHeadingLink = function (e, id) {
     e.preventDefault();
     if (!activeFilePath) return;
-    
+
     var baseUrl = window.location.href.split('#')[0];
     var pathStr = '#kb/' + encodeURIComponent(activeFilePath.replace('.md', ''));
     var fullLink = baseUrl + pathStr + '#' + id;
-    
+
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(fullLink).then(function() {
+      navigator.clipboard.writeText(fullLink).then(function () {
         var target = e.currentTarget;
         target.classList.add('copied');
-        setTimeout(function() {
+        setTimeout(function () {
           target.classList.remove('copied');
         }, 1500);
       });
     }
-    
+
     if (history.replaceState) {
       history.replaceState(null, null, pathStr + '#' + id);
     }
@@ -83,7 +83,7 @@
   /* ── Sidebar Categories Grid ─────────────────────────────────── */
   function renderCategoryTabs(manifest) {
     if (!catTabsContainer) return;
-    
+
     // Remove existing category tabs, but preserve search tab
     catTabsContainer.querySelectorAll('.kb-cat-tab').forEach(function (tab) {
       tab.remove();
@@ -102,8 +102,8 @@
     allTab.innerHTML =
       '<span class="kb-cat-tab-icon">🌐</span>' +
       '<div class="kb-cat-tab-meta">' +
-        '<span class="kb-cat-tab-label">All Topics</span>' +
-        '<span class="kb-cat-tab-count">' + totalTopicsCount + '</span>' +
+      '<span class="kb-cat-tab-label">All Topics</span>' +
+      '<span class="kb-cat-tab-count">' + totalTopicsCount + '</span>' +
       '</div>';
 
     allTab.addEventListener('click', function () {
@@ -123,8 +123,8 @@
       tab.innerHTML =
         '<span class="kb-cat-tab-icon">' + cat.icon + '</span>' +
         '<div class="kb-cat-tab-meta">' +
-          '<span class="kb-cat-tab-label">' + cat.label + '</span>' +
-          '<span class="kb-cat-tab-count">' + count + '</span>' +
+        '<span class="kb-cat-tab-label">' + cat.label + '</span>' +
+        '<span class="kb-cat-tab-count">' + count + '</span>' +
         '</div>';
 
       tab.addEventListener('click', function () {
@@ -179,7 +179,7 @@
 
     if (categoriesToRender.length === 0) return;
 
-    categoriesToRender.forEach(function(category) {
+    categoriesToRender.forEach(function (category) {
       if (!category.groups) return;
 
       category.groups.forEach(function (group) {
@@ -204,8 +204,8 @@
 
             item.innerHTML =
               '<button class="kb-topic-btn" type="button">' +
-                '<span class="topic-dot"></span>' +
-                '<span class="kb-topic-label">' + topic.label + '</span>' +
+              '<span class="topic-dot"></span>' +
+              '<span class="kb-topic-label">' + topic.label + '</span>' +
               '</button>';
 
             var btn = item.querySelector('.kb-topic-btn');
@@ -269,7 +269,7 @@
     if (panelBody) {
       panelBody.innerHTML =
         '<div class="kb-loading">' +
-          '<div class="kb-spinner"></div>' +
+        '<div class="kb-spinner"></div>' +
         '</div>';
     }
 
@@ -279,25 +279,25 @@
       return;
     }
 
-    
-      fetch(rawUrl(filePath))
-        .then(function (res) {
-          if (!res.ok) throw new Error('Not found');
-          return res.text();
-        })
-        .then(function (md) {
-          contentCache[filePath] = md;
-          renderMarkdown(panelBody, md, filePath);
-        })
-        .catch(function () {
-          panelBody.innerHTML =
-            '<div style="text-align:center;padding:4rem 2rem;color:rgba(255,255,255,0.35);">' +
-              '<div style="font-size:3.5rem;margin-bottom:1rem;">📝</div>' +
-              '<div style="font-family:Inter,sans-serif;font-size:1.5rem;font-weight:600;margin-bottom:0.5rem;">Coming Soon</div>' +
-              '<div style="font-family:Inter,sans-serif;font-size:1.2rem;">This topic is being written.</div>' +
-            '</div>';
-        });
-    
+
+    fetch(rawUrl(filePath))
+      .then(function (res) {
+        if (!res.ok) throw new Error('Not found');
+        return res.text();
+      })
+      .then(function (md) {
+        contentCache[filePath] = md;
+        renderMarkdown(panelBody, md, filePath);
+      })
+      .catch(function () {
+        panelBody.innerHTML =
+          '<div style="text-align:center;padding:4rem 2rem;color:rgba(255,255,255,0.35);">' +
+          '<div style="font-size:3.5rem;margin-bottom:1rem;">📝</div>' +
+          '<div style="font-family:Inter,sans-serif;font-size:1.5rem;font-weight:600;margin-bottom:0.5rem;">Coming Soon</div>' +
+          '<div style="font-family:Inter,sans-serif;font-size:1.2rem;">This topic is being written.</div>' +
+          '</div>';
+      });
+
 
     // Update URL hash
     if (history.replaceState) {
@@ -425,7 +425,7 @@
       header.innerHTML =
         '<span class="kb-code-lang">' + (lang || 'code') + '</span>' +
         '<button class="kb-copy-btn" type="button">' +
-          '<span class="copy-text">Copy</span>' +
+        '<span class="copy-text">Copy</span>' +
         '</button>';
 
       pre.insertBefore(header, pre.firstChild);
@@ -453,16 +453,16 @@
     sourceLink.target = '_blank';
     sourceLink.rel = 'noopener';
     sourceLink.innerHTML = '📂 View source on GitHub';
-    
+
     var mdEl = container.querySelector('.kb-markdown');
     if (mdEl) mdEl.appendChild(sourceLink);
 
     // Scroll container to top initially
     container.scrollTop = 0;
-    
+
     // If a heading was deep linked, scroll to it after rendering
     if (targetHeadingId) {
-      setTimeout(function() {
+      setTimeout(function () {
         var el = document.getElementById(targetHeadingId);
         if (el) {
           container.scrollTo({
@@ -505,7 +505,7 @@
       // Prevent input from losing focus when clicking the icon
       // This ensures our click logic can accurately detect if the input is active
       if (icon) {
-        icon.addEventListener('mousedown', function(e) {
+        icon.addEventListener('mousedown', function (e) {
           e.preventDefault();
         });
       }
@@ -633,11 +633,11 @@
 
           item.innerHTML =
             '<button class="kb-topic-btn" type="button">' +
-              '<span class="topic-dot"></span>' +
-              '<div class="kb-search-item-info">' +
-                '<span class="kb-topic-label">' + match.topic.label + '</span>' +
-                '<span class="kb-topic-sublabel">' + match.group.label + '</span>' +
-              '</div>' +
+            '<span class="topic-dot"></span>' +
+            '<div class="kb-search-item-info">' +
+            '<span class="kb-topic-label">' + match.topic.label + '</span>' +
+            '<span class="kb-topic-sublabel">' + match.group.label + '</span>' +
+            '</div>' +
             '</button>';
 
           var btn = item.querySelector('.kb-topic-btn');
@@ -701,10 +701,28 @@
         entries.forEach(function (entry) {
           if (entry.isIntersecting) {
             entry.target.classList.add('visible');
+
+            // Micro-interaction: scroll category tabs slightly to hint horizontal scrollability
+            if (entry.target.classList.contains('kb-cat-tabs') && !entry.target.classList.contains('kb-has-bounced')) {
+              entry.target.classList.add('kb-has-bounced');
+              setTimeout(function () {
+                var maxScroll = entry.target.scrollWidth - entry.target.clientWidth;
+                if (maxScroll > 15) {
+                  var peekDistance = Math.min(200, maxScroll);
+                  entry.target.scrollTo({ left: peekDistance, behavior: 'smooth' });
+                  setTimeout(function () {
+                    entry.target.scrollTo({ left: 0, behavior: 'smooth' });
+                  }, 800);
+                }
+              }, 700); // Wait for entrance fade/slide-up animation to complete
+            }
           }
         });
       },
-      { threshold: 0.08 }
+      {
+        rootMargin: '0px 0px 150px 0px',
+        threshold: 0.01
+      }
     );
 
     document.querySelectorAll('.kb-animate-in').forEach(function (el) {
@@ -777,14 +795,14 @@
     if (typeof marked !== 'undefined') {
       marked.use({
         renderer: {
-          heading: function(text, level) {
+          heading: function (text, level) {
             var rawText = text.replace(/<[^>]*>?/gm, '');
             var id = rawText.toLowerCase().replace(/[^\w]+/g, '-').replace(/(^-|-$)/g, '');
             var svgLink = '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>';
             return '<h' + level + ' id="' + id + '" class="kb-heading">' +
-                   text +
-                   '<a href="#' + id + '" class="kb-heading-anchor" onclick="copyHeadingLink(event, \'' + id + '\')">' + svgLink + '</a>' +
-                   '</h' + level + '>\n';
+              text +
+              '<a href="#' + id + '" class="kb-heading-anchor" onclick="copyHeadingLink(event, \'' + id + '\')">' + svgLink + '</a>' +
+              '</h' + level + '>\n';
           }
         }
       });
@@ -830,18 +848,18 @@
 
     // Keyboard Navigation (Feature 4)
     if (topicsContainer) {
-      topicsContainer.addEventListener('keydown', function(e) {
+      topicsContainer.addEventListener('keydown', function (e) {
         if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
           e.preventDefault();
           var buttons = Array.from(topicsContainer.querySelectorAll('.kb-topic-btn'));
           if (buttons.length === 0) return;
-          
+
           var index = buttons.indexOf(document.activeElement);
           if (index === -1) {
             buttons[0].focus();
             return;
           }
-          
+
           if (e.key === 'ArrowDown') {
             var nextIndex = (index + 1) % buttons.length;
             buttons[nextIndex].focus();
@@ -855,26 +873,26 @@
     }
 
     // Load Manifest
-    
-      var manifestUrl = 'https://raw.githubusercontent.com/' + CONFIG.githubUser + '/' + CONFIG.githubRepo + '/' + CONFIG.githubBranch + '/manifest.json';
-      fetch(manifestUrl)
-        .then(function (res) { return res.json(); })
-        .then(function (manifest) {
-          currentManifest = manifest;
-          activeCategoryId = 'all';
-          renderCategoryTabs(currentManifest);
-          selectCategory(activeCategoryId);
-          handleHashRoute();
-        })
-        .catch(function (err) {
-          console.error("Failed to load manifest:", err);
-          var topicsContainer = document.querySelector('.kb-topics-list-container');
-          if (topicsContainer) topicsContainer.innerHTML = '<div style="padding: 1rem; color: #ff6b6b;">Failed to load data from GitHub. Make sure the repository exists and is public.</div>';
-        });
+
+    var manifestUrl = 'https://raw.githubusercontent.com/' + CONFIG.githubUser + '/' + CONFIG.githubRepo + '/' + CONFIG.githubBranch + '/manifest.json';
+    fetch(manifestUrl)
+      .then(function (res) { return res.json(); })
+      .then(function (manifest) {
+        currentManifest = manifest;
+        activeCategoryId = 'all';
+        renderCategoryTabs(currentManifest);
+        selectCategory(activeCategoryId);
+        handleHashRoute();
+      })
+      .catch(function (err) {
+        console.error("Failed to load manifest:", err);
+        var topicsContainer = document.querySelector('.kb-topics-list-container');
+        if (topicsContainer) topicsContainer.innerHTML = '<div style="padding: 1rem; color: #ff6b6b;">Failed to load data from GitHub. Make sure the repository exists and is public.</div>';
+      });
 
     initSearch();
     initScrollAnimations();
-    
+
     // Listen to hash change manually
     window.addEventListener('hashchange', handleHashRoute);
   }
