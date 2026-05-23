@@ -615,6 +615,19 @@ html, body {
   border-bottom: 1px solid var(--kb-border);
   background: rgba(255, 255, 255, 0.015);
   flex-shrink: 0;
+  position: relative;
+}
+
+.kb-reading-progress {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 0%;
+  height: 2px;
+  background: var(--kb-accent);
+  box-shadow: 0 0 8px var(--kb-accent);
+  transition: width 0.1s ease-out;
+  z-index: 10;
 }
 
 .kb-panel-breadcrumb {
@@ -1237,11 +1250,9 @@ body.kb-zen-active {
     min-height: 0;
     padding: 0 2rem;
     z-index: 1001; /* Must be higher than backdrop's 999 to prevent it from covering the drawer */
-  }
-
-  /* Prevent transform from trapping the fixed slide-in drawer */
-  .kb-layout-container.kb-animate-in.visible {
     transform: none !important;
+    -webkit-transform: none !important;
+    will-change: auto !important;
   }
 
   .kb-nav-sidebar {
@@ -1274,6 +1285,7 @@ body.kb-zen-active {
     top: 0;
     right: 0;
     bottom: 0;
+    height: 100vh !important;
     width: 75%;
     max-width: 580px;
     min-width: 320px;

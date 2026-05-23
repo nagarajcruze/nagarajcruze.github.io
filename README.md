@@ -52,12 +52,12 @@ My Personal Portfolio Page
 ## 🟡 Pending Features (deferred)
 - [x] Feature 1: "Zen Mode" fullscreen reader
 - [x] Feature 2: Expandable "Topics" drawer for mobile
-- [ ] Feature 3: Set up GitHub Repo & Fetch Manifest via API
+- [x] Feature 3: Set up GitHub Repo & Fetch Manifest via API
 - [x] Feature 4: Keyboard navigation for topics sidebar
 - [ ] Feature 5: Keyboard Shortcuts (`Ctrl+K` for search, `Ctrl+B` for sidebar, `Esc` to close) (planned later)
 - [ ] Feature 6: Syntax Highlighting Theme Switcher (planned later)
 - [x] Feature 7: Copy Link to Heading (Deep Anchors)
-- [ ] Feature 8: Reading progress bar at the top of the knowledge base panel
+- [x] Feature 8: Reading progress bar at the top of the knowledge base panel
 - [x] Feature 9: Next/Previous topic navigation buttons at the bottom of the content panel
 - [ ] Feature 10: Dynamic Table of Contents (ToC) sidebar for long articles
 - [ ] Feature 11: Full-text content search (planned later)
@@ -68,3 +68,4 @@ My Personal Portfolio Page
 - [ ] Feature 16: Admonitions & visual callouts (planned later)
 - [ ] Feature 17: Gamified checklists / mark completed (planned later)
 - [ ] Feature 18: Roadmaps & Learning paths (planned later)
+- [x] Feature 19: Prefetch next topic at 75% scroll progress with network retry mechanism

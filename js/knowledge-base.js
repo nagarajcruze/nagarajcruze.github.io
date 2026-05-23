@@ -21,9 +21,12 @@
   var activeFilePath = null;
   var targetHeadingId = null;
   var contentCache = {};
+  var prefetchedFile = null;
+  var prefetchInProgress = false;
+  var pendingNextNavigation = false;
 
   /* ── DOM Selectors ───────────────────────────────────────────── */
-  var catTabsContainer, topicsContainer, contentPanel, contentPlaceholder, contentInner, panelBody, panelBreadcrumb, closeBtn, backdropEl, zenBtn;
+  var catTabsContainer, topicsContainer, contentPanel, contentPlaceholder, contentInner, panelBody, panelBreadcrumb, closeBtn, backdropEl, zenBtn, progressBar;
 
   /* ── Utilities ───────────────────────────────────────────────── */
   function debounce(func, wait) {
@@ -215,6 +218,10 @@
             }
 
             btn.addEventListener('click', function () {
+              if (!contentCache[topic.file] && typeof navigator !== 'undefined' && !navigator.onLine) {
+                alert("You are currently offline. Please check your internet connection.");
+                return;
+              }
               // Remove active classes
               topicsContainer.querySelectorAll('.kb-topic-btn.active').forEach(function (b) {
                 b.classList.remove('active');
@@ -248,6 +255,18 @@
   /* ── Content View / Display Topic ────────────────────────────── */
   function selectTopic(filePath, breadcrumb) {
     activeFilePath = filePath;
+
+    if (progressBar) {
+      progressBar.style.width = '0%';
+    }
+
+    // Reset prefetch states on topic load
+    prefetchedFile = null;
+    prefetchInProgress = false;
+    pendingNextNavigation = false;
+
+    // Sync active sidebar button highlight (Feature 9 fix)
+    updateActiveTopicHighlight();
 
     // Show Content view, hide placeholder
     if (contentPlaceholder) contentPlaceholder.classList.add('kb-hidden');
@@ -349,6 +368,11 @@
     if (contentPanel) contentPanel.classList.remove('open');
     if (backdropEl) backdropEl.classList.remove('open');
     document.body.classList.remove('kb-drawer-open');
+
+    // Keep activeFilePath set so that the sidebar highlight remains active,
+    // but hide the content inner view to prevent the slide-in on scroll-resize
+    if (contentPlaceholder) contentPlaceholder.classList.remove('kb-hidden');
+    if (contentInner) contentInner.classList.add('kb-hidden');
 
     // Exit Zen Mode if active
     exitZenMode();
@@ -500,6 +524,12 @@
           '</svg>';
 
         nextBtn.addEventListener('click', function () {
+          var targetFile = nextItem.getAttribute('data-file');
+          if (!contentCache[targetFile] && typeof navigator !== 'undefined' && !navigator.onLine) {
+            pendingNextNavigation = true;
+            alert("You are currently offline. We will automatically load the next topic as soon as your connection is restored.");
+            return;
+          }
           var sidebarBtn = nextItem.querySelector('.kb-topic-btn');
           if (sidebarBtn) sidebarBtn.click();
         });
@@ -832,6 +862,61 @@
     }
   }
 
+  /* ── Prefetching & Retry Mechanism (Feature 19) ──────────────── */
+  function getNextTopicFile() {
+    if (!topicsContainer || !activeFilePath) return null;
+    var topicItems = Array.from(topicsContainer.querySelectorAll('.kb-topic-item'));
+    var index = topicItems.findIndex(function (item) {
+      return item.getAttribute('data-file') === activeFilePath;
+    });
+    if (index !== -1 && index < topicItems.length - 1) {
+      return topicItems[index + 1].getAttribute('data-file');
+    }
+    return null;
+  }
+
+  function triggerNextTopicPrefetch() {
+    var nextFile = getNextTopicFile();
+    if (!nextFile) return;
+
+    if (prefetchedFile === nextFile || prefetchInProgress || contentCache[nextFile]) {
+      return;
+    }
+
+    prefetchedFile = nextFile;
+    prefetchInProgress = true;
+    prefetchFileContent(nextFile);
+  }
+
+  function prefetchFileContent(filePath) {
+    fetch(rawUrl(filePath))
+      .then(function (res) {
+        if (!res.ok) throw new Error('Failed to prefetch');
+        return res.text();
+      })
+      .then(function (md) {
+        contentCache[filePath] = md;
+        prefetchInProgress = false;
+
+        // Auto-navigate if user clicked Next while offline and was waiting for this file
+        if (pendingNextNavigation && activeFilePath !== filePath) {
+          pendingNextNavigation = false;
+          var topicItems = Array.from(topicsContainer.querySelectorAll('.kb-topic-item'));
+          var nextItem = topicItems.find(function (item) {
+            return item.getAttribute('data-file') === filePath;
+          });
+          if (nextItem) {
+            var sidebarBtn = nextItem.querySelector('.kb-topic-btn');
+            if (sidebarBtn) sidebarBtn.click();
+          }
+        }
+      })
+      .catch(function (err) {
+        prefetchInProgress = false;
+        console.warn("Prefetch failed for:", filePath, err);
+      });
+  }
+
   /* ── Initialization ──────────────────────────────────────────── */
   function init() {
     // Select elements
@@ -845,6 +930,34 @@
     closeBtn = document.getElementById('kb-panel-close-btn');
     backdropEl = document.querySelector('.kb-drawer-backdrop');
     zenBtn = document.getElementById('kb-panel-zen-btn');
+    progressBar = document.getElementById('kb-progress-bar');
+
+    // Attach scroll listener to panelBody for reading progress bar (Feature 8)
+    if (panelBody && progressBar) {
+      panelBody.addEventListener('scroll', function () {
+        var scrollTop = panelBody.scrollTop;
+        var scrollHeight = panelBody.scrollHeight - panelBody.clientHeight;
+        var progress = 0;
+        if (scrollHeight > 0) {
+          progress = (scrollTop / scrollHeight) * 100;
+        }
+        progressBar.style.width = progress + '%';
+
+        // Trigger prefetch of the next topic at 75% scroll progress (Feature 19)
+        if (progress >= 75) {
+          triggerNextTopicPrefetch();
+        }
+      });
+    }
+
+    // Listen to browser online event for retrying prefetch (Feature 19)
+    window.addEventListener('online', function () {
+      var nextFile = getNextTopicFile();
+      if (nextFile && !contentCache[nextFile] && !prefetchInProgress) {
+        prefetchInProgress = true;
+        prefetchFileContent(nextFile);
+      }
+    });
 
     // Configure marked.js with custom renderer
     if (typeof marked !== 'undefined') {
