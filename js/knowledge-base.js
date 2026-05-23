@@ -40,21 +40,55 @@
     };
   }
 
+  function trackPageView(url, title) {
+    if (window.umami && typeof window.umami.track === 'function') {
+      window.umami.track(function (props) {
+        return Object.assign({}, props, {
+          url: url,
+          title: title || document.title
+        });
+      });
+    } else {
+      setTimeout(function () {
+        if (window.umami && typeof window.umami.track === 'function') {
+          window.umami.track(function (props) {
+            return Object.assign({}, props, {
+              url: url,
+              title: title || document.title
+            });
+          });
+        }
+      }, 300);
+    }
+  }
+
   window.copyHeadingLink = function (e, id) {
     e.preventDefault();
     if (!activeFilePath) return;
 
+    var target = e.currentTarget; // Capture target synchronously!
     var baseUrl = window.location.href.split('#')[0];
     var pathStr = '#kb/' + encodeURIComponent(activeFilePath.replace('.md', ''));
     var fullLink = baseUrl + pathStr + '#' + id;
 
     if (navigator.clipboard) {
       navigator.clipboard.writeText(fullLink).then(function () {
-        var target = e.currentTarget;
-        target.classList.add('copied');
-        setTimeout(function () {
-          target.classList.remove('copied');
-        }, 1500);
+        if (target) {
+          target.classList.add('copied');
+          setTimeout(function () {
+            target.classList.remove('copied');
+          }, 1500);
+        }
+
+        // Track copied heading link in Umami with topic prefix
+        if (window.umami && typeof window.umami.track === 'function') {
+          var activeBtn = document.querySelector('.kb-topic-btn.active');
+          var topicLabel = activeBtn ? activeBtn.querySelector('.kb-topic-label').textContent : '';
+          var displayLabel = topicLabel ? (topicLabel + ' > #' + id) : ('#' + id);
+          window.umami.track('Anchor: ' + displayLabel, {
+            file: activeFilePath
+          });
+        }
       });
     }
 
@@ -256,6 +290,17 @@
   function selectTopic(filePath, breadcrumb) {
     activeFilePath = filePath;
 
+    // Track topic view in Umami Analytics with a clean URL path
+    var cleanUrl = '/kb/' + filePath.replace('.md', '');
+    var topicTitle = breadcrumb ? breadcrumb[2] : filePath;
+    trackPageView(cleanUrl, topicTitle);
+
+    // Also track as a custom event so it shows in the "Events" tab on the Umami dashboard
+    if (window.umami && typeof window.umami.track === 'function') {
+      window.umami.track(topicTitle, {
+        file: filePath
+      });
+    }
     if (progressBar) {
       progressBar.style.width = '0%';
     }
@@ -330,6 +375,13 @@
 
     var isZen = kbSection.classList.toggle('kb-zen-mode');
     document.body.classList.toggle('kb-zen-active', isZen);
+
+    // Track toggle Zen mode in Umami
+    if (window.umami && typeof window.umami.track === 'function') {
+      window.umami.track(isZen ? 'Enter Zen Mode' : 'Exit Zen Mode', {
+        file: activeFilePath
+      });
+    }
 
     if (zenBtn) {
       var icon = zenBtn.querySelector('i');
@@ -465,6 +517,34 @@
               btn.classList.remove('copied');
               btn.querySelector('.copy-text').textContent = 'Copy';
             }, 2000);
+
+            // Find the closest preceding heading element
+            var subTopic = "";
+            var sibling = pre.previousElementSibling;
+            while (sibling) {
+              if (/^H[1-6]$/i.test(sibling.tagName)) {
+                subTopic = sibling.textContent.replace("🔗", "").trim();
+                break;
+              }
+              sibling = sibling.previousElementSibling;
+            }
+
+            var activeBtn = topicsContainer.querySelector('.kb-topic-btn.active');
+            var topicLabel = activeBtn ? activeBtn.querySelector('.kb-topic-label').textContent : '';
+
+            var displayLabel;
+            if (subTopic) {
+              displayLabel = topicLabel ? (topicLabel + ' > ' + subTopic) : subTopic;
+            } else {
+              displayLabel = topicLabel || filePath;
+            }
+
+            // Track copied code event in Umami (labeled with the topic + sub-topic heading)
+            if (window.umami && typeof window.umami.track === 'function') {
+              window.umami.track('Copy Code: ' + displayLabel, {
+                file: filePath
+              });
+            }
           });
         }
       });
@@ -650,6 +730,12 @@
   function performSearch(query, countEl) {
     if (!topicsContainer || !currentManifest) return;
 
+    if (query) {
+      if (window.umami && typeof window.umami.track === 'function') {
+        window.umami.track('Search: ' + query);
+      }
+    }
+
     var oldNoResults = topicsContainer.querySelector('.kb-no-results');
     if (oldNoResults) oldNoResults.remove();
 
@@ -818,7 +904,10 @@
   /* ── Deep Hash Routing ────────────────────────────────────────── */
   function handleHashRoute() {
     var hash = window.location.hash;
-    if (!hash || hash.indexOf('#kb/') !== 0) return;
+    if (!hash || hash.indexOf('#kb/') !== 0) {
+      trackPageView('/', 'Home');
+      return;
+    }
 
     var parts = hash.slice(4).split('#');
     var filePath = decodeURIComponent(parts[0]) + '.md';
