@@ -1250,7 +1250,7 @@ header .logo a {
  *
  * ------------------------------------------------------------------- 
  */
-#intro {
+section#intro {
 	background: #151515 url(../images/intro-bg.jpg) no-repeat center bottom;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
@@ -1454,12 +1454,12 @@ header .logo a {
  *
  * ------------------------------------------------------------------- 
  */
-#about {
+section#about {
 	background: #FFFFFF;
 	padding-top: 12rem;
 	padding-bottom: 15rem;
 }
-#about .section-intro {
+section#about .section-intro {
 	margin-bottom: 3rem;
 }
 
@@ -1585,27 +1585,27 @@ header .logo a {
  *
  * ------------------------------------------------------------------- 
  */
-#resume {
+section#resume {
 	padding-top: 12rem;
 	padding-bottom: 12rem;
 }
 
-#resume .resume-header {
+section#resume .resume-header {
 	text-align: center;
 }
-#resume .resume-header h2 {
+section#resume .resume-header h2 {
 	color: #FF0077;
 }
 
-#resume .resume-timeline {
+section#resume .resume-timeline {
 	max-width: 980px;
 }
-#resume .timeline-wrap {
+section#resume .timeline-wrap {
 	position: relative;
 	margin-top: 1.5rem;
 	margin-bottom: 6rem;
 }
-#resume .timeline-wrap::before {
+section#resume .timeline-wrap::before {
 	content: "";
 	display: block;
 	width: 1px;
@@ -1754,17 +1754,17 @@ header .logo a {
  *
  * ------------------------------------------------------------------- 
  */
-#portfolio {
+section#portfolio {
 	background: #FFFFFF;
 	padding-top: 12rem;
 	padding-bottom: 12rem;
 }
-#portfolio .folio-item {
+section#portfolio .folio-item {
 	padding: 0;
 	position: relative;
 	overflow: hidden;
 }
-#portfolio .folio-item img {
+section#portfolio .folio-item img {
 	vertical-align: middle;
 	-moz-transition: all 0.5s ease-in-out;
 	-o-transition: all 0.5s ease-in-out;
@@ -1773,7 +1773,7 @@ header .logo a {
 	transition: all 0.5s ease-in-out;
 }
 
-#portfolio .overlay {
+section#portfolio .overlay {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -2059,7 +2059,7 @@ header .logo a {
  *
  * ------------------------------------------------------------------- 
  */
-#services {
+section#services {
 	background: #313131 url(../images/bg.jpg) no-repeat center;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
@@ -2069,7 +2069,7 @@ header .logo a {
 	color: white;
 	position: relative;
 }
-#services .overlay {
+section#services .overlay {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -2079,17 +2079,17 @@ header .logo a {
 	opacity: .9;
 }
 
-#services .section-intro {
+section#services .section-intro {
 	margin-bottom: 1.8rem;
 }
 
-#services .section-intro h1 {
+section#services .section-intro h1 {
 	color: white;
 }
-#services .section-intro h5 {
+section#services .section-intro h5 {
 	color: #FF0077;
 }
-#services .section-intro p {
+section#services .section-intro p {
 	color: rgba(255, 255, 255, 0.7);
 }
 .services-content {
@@ -2214,18 +2214,18 @@ header .logo a {
  *
  * ------------------------------------------------------------------- 
  */
-#contact {
+section#contact {
 	background: #151515;
 	padding-top: 12rem;
 	padding-bottom: 7.2rem;
 }
-#contact .section-intro h1 {
+section#contact .section-intro h1 {
 	color: white;
 }
-#contact .section-intro h5 {
+section#contact .section-intro h5 {
 	color: #FF0077;
 }
-#contact .section-intro p {
+section#contact .section-intro p {
 	color: rgba(255, 255, 255, 0.7);
 }
 

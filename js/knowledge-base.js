@@ -467,9 +467,33 @@
 
     container.innerHTML = '<div class="kb-markdown">' + html + '</div>';
 
+    // Process Mermaid diagrams
+    var mermaidBlocks = [];
+    if (typeof mermaid !== 'undefined') {
+      container.querySelectorAll('pre code.language-mermaid').forEach(function (block) {
+        var pre = block.parentNode;
+        var div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = block.textContent;
+        pre.parentNode.replaceChild(div, pre);
+        mermaidBlocks.push(div);
+      });
+
+      if (mermaidBlocks.length > 0) {
+        try {
+          mermaid.run({
+            nodes: mermaidBlocks
+          });
+        } catch (err) {
+          console.error('Mermaid render error:', err);
+        }
+      }
+    }
+
     // Highlight code blocks
     if (typeof hljs !== 'undefined') {
       container.querySelectorAll('pre code').forEach(function (block) {
+        if (block.classList.contains('language-mermaid')) return;
         hljs.highlightElement(block);
       });
     }
@@ -1047,6 +1071,15 @@
         prefetchFileContent(nextFile);
       }
     });
+
+    // Initialize Mermaid
+    if (typeof mermaid !== 'undefined') {
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'dark',
+        securityLevel: 'loose'
+      });
+    }
 
     // Configure marked.js with custom renderer
     if (typeof marked !== 'undefined') {
