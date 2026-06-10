@@ -663,6 +663,9 @@ html, body {
   line-height: 1;
   padding: 0;
   font-family: 'Inter', sans-serif;
+  margin: 0;
+  text-transform: none;
+  letter-spacing: normal;
 }
 
 .kb-panel-btn:hover {
@@ -1030,7 +1033,11 @@ html, body {
   font-size: 0.95rem;
   cursor: pointer;
   transition: all 0.2s;
+  height: auto;
   line-height: 1.4;
+  margin: 0;
+  text-transform: none;
+  letter-spacing: normal;
 }
 
 .kb-copy-btn:hover {
@@ -1042,6 +1049,24 @@ html, body {
 .kb-copy-btn.copied {
   color: #00D4AA;
   border-color: rgba(0, 212, 170, 0.25);
+}
+
+/* Mermaid Diagrams */
+.mermaid {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--kb-border);
+  border-radius: var(--kb-radius-sm);
+  padding: 1.5rem;
+  margin: 1.4rem 0;
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+  box-sizing: border-box;
+}
+
+.mermaid svg {
+  max-width: 100% !important;
+  height: auto !important;
 }
 
 /* ── Content Footer & Next/Prev Navigation ────────────────────────── */
